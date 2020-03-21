@@ -122,7 +122,8 @@ LeNet and AlexNets accuracy on the MNIST an the Flowers Dataset when applied to 
 
 Details in README.md in the respective folder. (Experiments folder next to the examples folder, 
 for example TensorQuant-Univie-TAA/Experiments/LeNet)
-Each architecture gets it's own branch (LeNet or AlexNet).
+Each architecture gets it's own branch (LeNet or AlexNet). Include the Dockerfile required to run your experiment in the 
+respective branch and subfolder.
 
 Format:
 Training/Inference | Architecture | Dataset | Layer+Quantization mapping | Author | Branchname

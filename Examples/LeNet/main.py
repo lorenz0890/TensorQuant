@@ -16,7 +16,7 @@ from TensorQuant.Quantize import override
 
 def main():
     # Hacky bug fix, see: https://github.com/tensorflow/tensorflow/issues/24496
-    os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     # TensorQuant
     # Make sure the overrides are set before the model is created!
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
@@ -77,6 +77,6 @@ def main():
         verbose = 1)
     # Print the model's accuracy
     print("Test accuracy: %.2f"%(accuracy))
-    
+
 if __name__ == "__main__":
     main()
