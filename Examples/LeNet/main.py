@@ -15,6 +15,10 @@ import model
 from TensorQuant.Quantize import override
 
 def main():
+    config = tf.ConfigProto()
+    config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
+    config.log_device_placement = True  # to log device placement (on which device the operation ran)sess = tf.Session(config=config)set_session(sess)
+
     # Hacky bug fix, see: https://github.com/tensorflow/tensorflow/issues/24496
     #os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
     # TensorQuant
