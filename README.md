@@ -116,7 +116,7 @@ Usage: http://dgx.vda.univie.ac.at/doku.php#running_a_container_on_the_dgx1
 
 ## Experiments
 
-Short descriptions of initial round experiments, basically just who did what. Details in README.md od respective folder. (Probabyl we ll just make an experiments folder next to the examples folder)
+Short descriptions of initial round of experiments, basically just who did what. Details in README.md in the respective folder. (Probabyl we ll just make an experiments folder next to the examples folder)
 
 Format:
 
@@ -144,7 +144,7 @@ srun --gres=gpu:1 nvidia-docker run --shm-size=100g -v /storage:/storage lorenz 
 
 Docker tutorial: https://docs.docker.com/get-started/
 
-4) Bug fix in case you get "Could not create cudnn handle: CUDNN_STATUS_INTERNAL_ERROR":
+4) Hacky bug fix in case you get "Could not create cudnn handle: CUDNN_STATUS_INTERNAL_ERROR":
 
 https://github.com/tensorflow/tensorflow/issues/24496
 
