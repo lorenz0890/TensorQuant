@@ -128,9 +128,9 @@ Training | LeNet | MNIST | Conv1 : Nearest, 32, 12 | Lorenz
 
 ## Running an Experiment
 
-1) Get into UniVie VPN: 
+1) Get into Univie VPN if working from home: 
 
-https://zid.univie.ac.at/vpn/anleitungen/linux/
+Tutorial: https://zid.univie.ac.at/vpn/anleitungen/linux/
 
 2) ssh to DGX-1 Gateway: ssh <username>@slurm.vda.univie.ac.at
     
@@ -142,9 +142,11 @@ squeue
 srun --gres=gpu:1 nvidia-docker run --shm-size=100g -v /storage:/storage lorenz &> output.log &
 ```
 
+Docker tutorial: https://docs.docker.com/get-started/
+
 ## Report
 
-URL: https://www.overleaf.com/project/5e760de169952a0001a2e23f
+Overleaf document: https://www.overleaf.com/project/5e760de169952a0001a2e23f
 
 In the report on an experiment, please include results for baseline, quantization mapping, setup and how to reproduce your results.
 
