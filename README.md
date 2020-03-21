@@ -103,7 +103,14 @@ Dominik Loroch (Fraunhofer ITWM)
 
 Please reference to [this](https://arxiv.org/abs/1710.05758) paper.
 
-# Fork for Univeristy of Viennas TAA Group experiments with TensorQuant
+# Fork of the Univeristy of Vienna's TAA Group for experiments with TensorQuant
+## Project Description
+Short Project Description
+## Hardware
+DGX-1
 ## Experiments
+Short descriptions of experiments. Details in README.md od respective folder. (Probabyl we ll just make an experiments folder next to the examples folder)
+## Results
+See https://www.overleaf.com/project/5e760de169952a0001a2e23f
 ## Authors
 Lorenz Kummer (University of Vienna), Tabea Reichmann (University of Vienna)
