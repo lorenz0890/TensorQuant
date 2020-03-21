@@ -16,8 +16,8 @@ from TensorQuant.Quantize import override
 
 def main():
     # Hacky bug fix, see: https://github.com/tensorflow/tensorflow/issues/24496
-    os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-    
+    # os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+
     # TensorQuant
     # Make sure the overrides are set before the model is created!
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
@@ -66,7 +66,7 @@ def main():
         train_data,
         train_labels,
         batch_size = 128,
-        nb_epoch = 1,
+        epochs = 1,
         verbose = 1,
         callbacks=callbacks_list)
 
