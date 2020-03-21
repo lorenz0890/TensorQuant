@@ -108,9 +108,21 @@ Please reference to [this](https://arxiv.org/abs/1710.05758) paper.
 Short Project Description
 ## Hardware
 DGX-1
+Usage: http://dgx.vda.univie.ac.at/doku.php#running_a_container_on_the_dgx1
 ## Experiments
-Short descriptions of experiments. Details in README.md od respective folder. (Probabyl we ll just make an experiments folder next to the examples folder)
-## Results
+Short descriptions of initial round experiments, basically just who did what. Details in README.md od respective folder. (Probabyl we ll just make an experiments folder next to the examples folder)
+Format:
+Training/Inference | Architecture | Dataset | Quantization | Author
+Example:
+Training | LeNet | MNIST | Conv1 : Nearest, 32, 12 | Lorenz
+## Running an Experiment
+Example:
+```
+srun docker build -t lorenz:latest /nfs/home/lorenzk90/
+squeue
+srun --gres=gpu:1 nvidia-docker run --shm-size=100g -v /storage:/storage lorenz &> output.log &
+```
+## Report
 See https://www.overleaf.com/project/5e760de169952a0001a2e23f
 ## Authors
 Lorenz Kummer (University of Vienna), Tabea Reichmann (University of Vienna)
