@@ -144,6 +144,10 @@ srun --gres=gpu:1 nvidia-docker run --shm-size=100g -v /storage:/storage lorenz 
 
 Docker tutorial: https://docs.docker.com/get-started/
 
+4) Bug fix in case you get "Could not create cudnn handle: CUDNN_STATUS_INTERNAL_ERROR":
+
+https://github.com/tensorflow/tensorflow/issues/24496
+
 ## Report
 
 Overleaf document: https://www.overleaf.com/project/5e760de169952a0001a2e23f
