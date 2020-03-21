@@ -3,6 +3,7 @@
 
 # LeNet for MNIST using Keras and TensorFlow
 import tensorflow as tf
+import os
 
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.datasets import mnist
@@ -14,7 +15,8 @@ import model
 from TensorQuant.Quantize import override
 
 def main():
-
+    # Hacky bug fix, see: https://github.com/tensorflow/tensorflow/issues/24496
+    os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
     # TensorQuant
     # Make sure the overrides are set before the model is created!
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
