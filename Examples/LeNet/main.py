@@ -15,17 +15,9 @@ import model
 from TensorQuant.Quantize import override
 
 def main():
-    # Another bug fix, see https://kobkrit.com/using-allow-growth-memory-option-in-tensorflow-and-keras-dc8c8081bc96
-    config = tf.compat.v1.ConfigProto()
-    config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
-    config.log_device_placement = True  # to log device placement (on which device the operation ran)sess = tf.Session(config=config)set_session(sess)
-    sess = tf.Session()
-    sess.run(tf.global_variables_initializer())
-
     # Hacky bug fix, see: https://github.com/tensorflow/tensorflow/issues/24496
-    #os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-
-
+    os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+    
     # TensorQuant
     # Make sure the overrides are set before the model is created!
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
