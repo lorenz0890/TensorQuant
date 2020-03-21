@@ -16,7 +16,7 @@ from TensorQuant.Quantize import override
 
 def main():
     # Hacky bug fix, see: https://github.com/tensorflow/tensorflow/issues/24496
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
     # TensorQuant
     # Make sure the overrides are set before the model is created!
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
