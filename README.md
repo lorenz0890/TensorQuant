@@ -102,3 +102,8 @@ The overrides must be done before the model is build. The available overrides ar
 Dominik Loroch (Fraunhofer ITWM)
 
 Please reference to [this](https://arxiv.org/abs/1710.05758) paper.
+
+# Fork for Univeristy of Viennas TAA Group experiments with TensorQuant
+## Experiments
+## Authors
+Lorenz Kummer (University of Vienna), Tabea Reichmann (University of Vienna)
