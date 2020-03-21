@@ -107,7 +107,7 @@ Please reference to [this](https://arxiv.org/abs/1710.05758) paper.
 
 ## Project Description
 
-Short Project Description
+Find how quantization at certain layers affects accuracy and find lower bounds for accuracy given certain quantization methods.
 
 ## Hardware
 
@@ -116,25 +116,28 @@ Usage: http://dgx.vda.univie.ac.at/doku.php#running_a_container_on_the_dgx1
 
 ## Experiments
 
-Short descriptions of initial round of experiments, basically just who did what. Details in README.md in the respective folder. (Probabyl we ll just make an experiments folder next to the examples folder)
+### Iteration 1
+In the initial round of experiments, we explore how different extrinsic quantization methods affect 
+LeNet and AlexNets accuracy on the MNIST an the Flowers Dataset when applied to single layers of the architecture.
+
+Details in README.md in the respective folder. (Experiments folder next to the examples folder, 
+for example TensorQuant-Univie-TAA/Experiments/LeNet)
+Each architecture gets it's own branch (LeNet or AlexNet).
 
 Format:
-
-Training/Inference | Architecture | Dataset | Quantization | Author
+Training/Inference | Architecture | Dataset | Layer+Quantization mapping | Author | Branchname
 
 Example:
-
 Training | LeNet | MNIST | Conv1 : Nearest, 32, 12 | Lorenz
 
 ## Running an Experiment
 
-1) Get into Univie VPN if working from home: 
-
-Tutorial: https://zid.univie.ac.at/vpn/anleitungen/linux/
-
-2) ssh to DGX-1 Gateway: ssh <username>@slurm.vda.univie.ac.at
-    
+1) Get into Univie VPN, even if you are at the faculty this is required, Tutorial: https://zid.univie.ac.at/vpn/anleitungen/linux/
+2) ssh to DGX-1 Gateway: ssh username@slurm.vda.univie.ac.at
 3) Build and run docker container, Example:
+4) Hacky bug fix in case you get "Could not create cudnn handle: CUDNN_STATUS_INTERNAL_ERROR": 
+https://github.com/tensorflow/tensorflow/issues/24496
+
 
 ```
 srun docker build -t lorenz:latest /nfs/home/lorenzk90/
@@ -144,9 +147,7 @@ srun --gres=gpu:1 nvidia-docker run --shm-size=100g -v /storage:/storage lorenz 
 
 Docker tutorial: https://docs.docker.com/get-started/
 
-4) Hacky bug fix in case you get "Could not create cudnn handle: CUDNN_STATUS_INTERNAL_ERROR":
 
-https://github.com/tensorflow/tensorflow/issues/24496
 
 ## Report
 
