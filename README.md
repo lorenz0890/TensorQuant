@@ -155,6 +155,7 @@ Docker tutorial: https://docs.docker.com/get-started/
 Overleaf document: https://www.overleaf.com/project/5e760de169952a0001a2e23f
 
 In the report on an experiment, please include results for baseline, quantization mapping, setup and how to reproduce your results.
+Regarding results, we will use average accuracy on test set for 10 runs. For batch size 128.
 
 ## Authors
 Lorenz Kummer (University of Vienna), Tabea Reichmann (University of Vienna)

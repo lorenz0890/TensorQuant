@@ -16,11 +16,13 @@ from TensorQuant.Quantize import override
 
 def main():
     # Control which devices TF sees. '-1' = None, '0', '1','2,'3'...PCI Bus ID
+    # https://www.tensorflow.org/guide/gpu
     # https://github.com/tensorflow/tensorflow/issues/24496
     #os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     #os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
-    # Bug fix that occurs when TF trys to alloate more GPU memory than hypervisor allows
+    # Controll how much and how TF allocates GPU memory
+    # https://www.tensorflow.org/guide/gpu
     # https://medium.com/@starriet87/tensorflow-2-0-wanna-limit-gpu-memory-10ad474e2528
     # Option 1: Allow memory growth. This means at the beginning, only a tiny fraction allocated, but memory consumption grows with process
     gpus = tf.config.experimental.list_physical_devices('GPU')
