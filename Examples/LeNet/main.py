@@ -88,7 +88,7 @@ def main():
     lenet.fit(
         train_data,
         train_labels,
-        batch_size = 64,
+        batch_size = 8,
         epochs = 1,
         verbose = 1,
         callbacks=callbacks_list)
@@ -97,7 +97,7 @@ def main():
     (loss, accuracy) = lenet.evaluate(
         test_data,
         test_labels,
-        batch_size = 128,
+        batch_size = 8,
         verbose = 1)
     # Print the model's accuracy
     print("Test accuracy: %.2f"%(accuracy))
