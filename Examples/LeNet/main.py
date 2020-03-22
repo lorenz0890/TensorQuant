@@ -16,6 +16,7 @@ from TensorQuant.Quantize import override
 
 def main():
     # Hacky bug fix, see: https://github.com/tensorflow/tensorflow/issues/24496
+    os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
     # TensorQuant
