@@ -15,10 +15,10 @@ import model
 from TensorQuant.Quantize import override
 
 def main():
-    # Control which devices TF sees. '0' = all, '-1' = None, '1','2,'3'...PCI Bus ID
+    # Control which devices TF sees. '-1' = None, '0', '1','2,'3'...PCI Bus ID
     # https://github.com/tensorflow/tensorflow/issues/24496
-    os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+    #os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+    #os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
     # Bug fix that occurs when TF trys to alloate more GPU memory than hypervisor allows
     # https://medium.com/@starriet87/tensorflow-2-0-wanna-limit-gpu-memory-10ad474e2528
