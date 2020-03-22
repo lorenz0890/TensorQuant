@@ -37,7 +37,7 @@ def main():
         try:
             for gpu in gpus:
                 tf.config.experimental.set_virtual_device_configuration(gpu, [
-                    tf.config.experimental.VirtualDeviceConfiguration(memory_limit=14235)]) #MB, maximum 14235 per device
+                    tf.config.experimental.VirtualDeviceConfiguration(memory_limit=1024)]) #MB, maximum 14235 per device
         except RuntimeError as e:
             print(e)
 
