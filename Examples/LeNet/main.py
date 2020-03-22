@@ -22,14 +22,14 @@ def main():
 
     # Bug fix that occurs when TF trys to alloate more GPU memory than hypervisor allows
     # https://medium.com/@starriet87/tensorflow-2-0-wanna-limit-gpu-memory-10ad474e2528
-    # Option 1: Allow memory growth
-    #gpus = tf.config.experimental.list_physical_devices('GPU')
-    #if gpus:
-    #    try:
-    #        for gpu in gpus:
-    #            tf.config.experimental.set_memory_growth(gpu, True)
-    #    except RuntimeError as e:
-    #        print(e)
+    # Option 1: Allow memory growth. This means at the beginning, only a tiny fraction allocated, but memory consumption grows with process
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    if gpus:
+        try:
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+        except RuntimeError as e:
+            print(e)
 
     # Option 2: set a limit on what TF trys to allocate per process
     #gpus = tf.config.experimental.list_physical_devices('GPU')
