@@ -136,9 +136,6 @@ Training | LeNet | MNIST | Conv1 : Nearest, 32, 12 | Lorenz
 1) Get into Univie VPN, even if you are at the faculty this is required, Tutorial: https://zid.univie.ac.at/vpn/anleitungen/linux/
 2) ssh to DGX-1 Gateway: ssh username@slurm.vda.univie.ac.at
 3) Build and run docker container, Example:
-4) Hacky bug fix in case you get "Could not create cudnn handle: CUDNN_STATUS_INTERNAL_ERROR": 
-https://github.com/tensorflow/tensorflow/issues/24496
-
 
 ```
 srun docker build -t lorenz:latest /nfs/home/lorenzk90/
