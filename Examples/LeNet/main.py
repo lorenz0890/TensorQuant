@@ -20,9 +20,9 @@ def main():
     #os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     #os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
-    # Bug fix that occurs when TF trys to alloate more GPU memory than available
+    # Bug fix that occurs when TF trys to alloate more virtual GPU memory than available
     # https://medium.com/@starriet87/tensorflow-2-0-wanna-limit-gpu-memory-10ad474e2528
-    # Options 1: Allow memory growth
+    # Options 1: Allow virtual memory growth
     #gpus = tf.config.experimental.list_physical_devices('GPU')
     #if gpus:
     #    try:
@@ -35,8 +35,9 @@ def main():
     gpus = tf.config.experimental.list_physical_devices('GPU')
     if gpus:
         try:
-            tf.config.experimental.set_virtual_device_configuration(gpus[0], [
-                tf.config.experimental.VirtualDeviceConfiguration(memory_limit=1024)])
+            for gpu in gpus:
+                tf.config.experimental.set_virtual_device_configuration(gpu, [
+                    tf.config.experimental.VirtualDeviceConfiguration(memory_limit=1024)])
         except RuntimeError as e:
             print(e)
 
