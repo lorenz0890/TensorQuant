@@ -15,13 +15,20 @@ import model
 from TensorQuant.Quantize import override
 
 def main():
-    # Hacky bug fix, see: https://github.com/tensorflow/tensorflow/issues/24496
+    # Hacky bug fix, see:
+    # https://github.com/tensorflow/tensorflow/issues/24496
     #os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     #os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
-    #
-    tf.config.gpu.set_per_process_memory_fraction(0.75)
-    tf.config.gpu.set_per_process_memory_growth(True)
+    # Bug fix that occurs when TF trys to alloate more GPOU memory than available
+    # https://github.com/tensorflow/tensorflow/issues/25138
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    if gpus:
+        try:
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+        except RuntimeError as e:
+            print(e)
 
     # TensorQuant
     # Make sure the overrides are set before the model is created!
