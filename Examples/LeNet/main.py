@@ -19,6 +19,10 @@ def main():
     #os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     #os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
+    #
+    tf.config.gpu.set_per_process_memory_fraction(0.75)
+    tf.config.gpu.set_per_process_memory_growth(True)
+
     # TensorQuant
     # Make sure the overrides are set before the model is created!
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
