@@ -88,7 +88,7 @@ def main():
     lenet.fit(
         train_data,
         train_labels,
-        batch_size = 128,
+        batch_size = 64,
         epochs = 1,
         verbose = 1,
         callbacks=callbacks_list)
