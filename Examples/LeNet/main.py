@@ -23,23 +23,23 @@ def main():
     # Bug fix that occurs when TF trys to alloate more GPU memory than hypervisor allows
     # https://medium.com/@starriet87/tensorflow-2-0-wanna-limit-gpu-memory-10ad474e2528
     # Option 1: Allow memory growth
-    gpus = tf.config.experimental.list_physical_devices('GPU')
-    if gpus:
-        try:
-            for gpu in gpus:
-                tf.config.experimental.set_memory_growth(gpu, True)
-        except RuntimeError as e:
-            print(e)
+    #gpus = tf.config.experimental.list_physical_devices('GPU')
+    #if gpus:
+    #    try:
+    #        for gpu in gpus:
+    #            tf.config.experimental.set_memory_growth(gpu, True)
+    #    except RuntimeError as e:
+    #        print(e)
 
     # Option 2: set a limit on what TF trys to allocate per process
-    gpus = tf.config.experimental.list_physical_devices('GPU')
-    if gpus:
-        try:
-            for gpu in gpus:
-                tf.config.experimental.set_virtual_device_configuration(gpu, [
-                    tf.config.experimental.VirtualDeviceConfiguration(memory_limit=1024)]) #MB, maximum 14235 per device
-        except RuntimeError as e:
-            print(e)
+    #gpus = tf.config.experimental.list_physical_devices('GPU')
+    #if gpus:
+    #    try:
+    #        for gpu in gpus:
+    #            tf.config.experimental.set_virtual_device_configuration(gpu, [
+    #                tf.config.experimental.VirtualDeviceConfiguration(memory_limit=1024)]) #MB, maximum 14235 per device
+    #    except RuntimeError as e:
+    #        print(e)
 
     # TensorQuant
     # Make sure the overrides are set before the model is created!
@@ -88,7 +88,7 @@ def main():
     lenet.fit(
         train_data,
         train_labels,
-        batch_size = 8,
+        batch_size = 128,
         epochs = 1,
         verbose = 1,
         callbacks=callbacks_list)
@@ -97,7 +97,7 @@ def main():
     (loss, accuracy) = lenet.evaluate(
         test_data,
         test_labels,
-        batch_size = 8,
+        batch_size = 128,
         verbose = 1)
     # Print the model's accuracy
     print("Test accuracy: %.2f"%(accuracy))
