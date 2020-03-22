@@ -15,18 +15,28 @@ import model
 from TensorQuant.Quantize import override
 
 def main():
-    # Hacky bug fix, see:
+    # Control which devices TF sees. '0' = all, '-1' = None, ('1','2,'3')...PCI Bus ID
     # https://github.com/tensorflow/tensorflow/issues/24496
     #os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
     #os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
-    # Bug fix that occurs when TF trys to alloate more GPOU memory than available
-    # https://github.com/tensorflow/tensorflow/issues/25138
+    # Bug fix that occurs when TF trys to alloate more GPU memory than available
+    # https://medium.com/@starriet87/tensorflow-2-0-wanna-limit-gpu-memory-10ad474e2528
+    # Options 1: Allow memory growth
+    #gpus = tf.config.experimental.list_physical_devices('GPU')
+    #if gpus:
+    #    try:
+    #        for gpu in gpus:
+    #            tf.config.experimental.set_memory_growth(gpu, True)
+    #    except RuntimeError as e:
+    #        print(e)
+
+    #Option 2: set a limit on what TF trys to allocate
     gpus = tf.config.experimental.list_physical_devices('GPU')
     if gpus:
         try:
-            for gpu in gpus:
-                tf.config.experimental.set_memory_growth(gpu, True)
+            tf.config.experimental.set_virtual_device_configuration(gpus[0], [
+                tf.config.experimental.VirtualDeviceConfiguration(memory_limit=1024)])
         except RuntimeError as e:
             print(e)
 
