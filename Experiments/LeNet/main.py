@@ -70,39 +70,62 @@ def main():
     # Tranform test labels to one-hot encoding
     test_labels = np.eye(10)[test_labels]
 
-    lenet = model.LeNet()
+    test_accuracies = list()
+    test_losses = list()
+    for i in range(100):
+        lenet = model.LeNet()
 
-    lenet.summary()
+        lenet.summary()
 
-    optimizer = tf.keras.optimizers.SGD(lr=0.01)
+        optimizer = tf.keras.optimizers.SGD(lr=0.01)
 
-    # Compile the network
-    lenet.compile(
-        loss = "categorical_crossentropy",
-        optimizer = optimizer,
-        metrics = ["accuracy"])
+        # Compile the network
+        lenet.compile(
+            loss="categorical_crossentropy",
+            optimizer=optimizer,
+            metrics=["accuracy"])
 
-    # Callbacks
-    callbacks_list=[]
-    #callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
+        # Callbacks
+        callbacks_list = []
+        # callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
 
-    # Train the model
-    lenet.fit(
-        train_data,
-        train_labels,
-        batch_size = 128,
-        epochs = 1,
-        verbose = 1,
-        callbacks=callbacks_list)
+        # Train the model
+        lenet.fit(
+            train_data,
+            train_labels,
+            batch_size=128,
+            epochs=1,
+            verbose=1,
+            callbacks=callbacks_list)
 
-    # Evaluate the model
-    (loss, accuracy) = lenet.evaluate(
-        test_data,
-        test_labels,
-        batch_size = 128,
-        verbose = 1)
-    # Print the model's accuracy
-    print("Test accuracy: %.2f"%(accuracy))
+        # Evaluate the model
+        (loss, accuracy) = lenet.evaluate(
+            test_data,
+            test_labels,
+            batch_size=128,
+            verbose=1)
+        # Push the model's accuracy in list
+        test_accuracies.append(accuracy)
+        test_losses.append(loss)
+
+    test_accuracies, test_losses = (list(x) for x in
+                                    zip(*sorted(zip(test_accuracies, test_losses), key=lambda pair: pair[0])))
+
+    trimmed_mean_accuracy = 0
+    trimmed_mean_loss = 0
+
+    for i in range(2, 98):
+        trimmed_mean_accuracy += test_accuracies[i]
+        trimmed_mean_loss += test_losses[i]
+
+    trimmed_mean_accuracy /= 95
+    trimmed_mean_loss /= 95
+
+    print(test_accuracies)
+    print(test_losses)
+
+    print(trimmed_mean_accuracy)
+    print(trimmed_mean_loss)
 
 if __name__ == "__main__":
     main()
