@@ -47,7 +47,7 @@ def main():
     # Make sure the overrides are set before the model is created!
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
     #override.extr_q_map={"Conv1" : "nearest,12,11"}
-    #override.weight_q_map={ "MaxPool1" : "nearest,16,8"}
+    override.weight_q_map={ "MaxPool1" : "nearest,16,8"}
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
     # Download the MNIST dataset
