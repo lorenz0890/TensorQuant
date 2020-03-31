@@ -49,7 +49,7 @@ def main():
     #override.extr_q_map={"Conv1" : "nearest,12,11"}
     #override.weight_q_map={ "Dense4" : "nearest,16,8"}
 
-    override.weight_q_map = {"Dense3": "binary"}
+    #override.weight_q_map = {"Dense3": "binary"}
 
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
@@ -117,7 +117,7 @@ def main():
     trimmed_mean_accuracy = 0
     trimmed_mean_loss = 0
 
-    for i in range(2, 98):
+    for i in range(2, 97):
         trimmed_mean_accuracy += test_accuracies[i]
         trimmed_mean_loss += test_losses[i]
 
