@@ -57,7 +57,7 @@ def main():
     script_dir = os.path.dirname(".")
     training_set_path = os.path.join(script_dir, './input/flowers/flowers/')
     test_set_path = os.path.join(script_dir, './input/flowers/flowers/')
-    batch_size = 128
+    batch_size = 64
     input_size = (256, 256)
 
     train_datagen = ImageDataGenerator(rescale=1. / 255,
