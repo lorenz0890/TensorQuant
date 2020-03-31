@@ -117,7 +117,8 @@ def main():
     alexnet.fit_generator(
         train_datagen,
         steps_per_epoch= training_set.samples // batch_size,
-        validation_data = validation_set.samples // batch_size,
+        validation_set = validation_set.samples // batch_size,
+        validation_data=validation_set,
         epochs = 1,
         verbose = 1,
         callbacks=callbacks_list)
