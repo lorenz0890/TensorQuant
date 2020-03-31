@@ -59,19 +59,22 @@ def main():
     test_set_path = os.path.join(script_dir, './input/flowers/flowers/')
     batch_size = 128
     input_size = (256, 256)
+
     train_datagen = ImageDataGenerator(rescale=1. / 255,
                                        shear_range=0.2,
                                        zoom_range=0.2,
-                                       horizontal_flip=True)
+                                       horizontal_flip=True,
+                                       validation_split=0.33)
 
     test_datagen = ImageDataGenerator(rescale=1. / 255, validation_split=0.33)
+
     training_set = train_datagen.flow_from_directory(training_set_path,
                                                      target_size=input_size,
                                                      batch_size=batch_size,
                                                      subset="training",
                                                      class_mode='categorical')
 
-    validation_set = test_datagen.flow_from_directory(test_set_path,
+    validation_set = train_datagen.flow_from_directory(test_set_path,
                                                 target_size=input_size,
                                                 batch_size=batch_size,
                                                 subset="validation",
