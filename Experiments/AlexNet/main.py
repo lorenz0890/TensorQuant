@@ -132,7 +132,7 @@ def main():
         steps = validation_set.samples // batch_size,
         verbose = 1)
     # Print the model's accuracy
-    #print("Test accuracy: %.2f"%(accuracy))
+    print("Test accuracy: %.2f"%(accuracy))
 
 if __name__ == "__main__":
     main()
