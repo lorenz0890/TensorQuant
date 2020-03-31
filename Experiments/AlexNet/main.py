@@ -55,8 +55,8 @@ def main():
     # Source:
     # https://www.kaggle.com/anandsingh1011/flower-recognition-model-in-keras/data
     script_dir = os.path.dirname(".")
-    training_set_path = os.path.join(script_dir, '../input/flowers/flowers/')
-    test_set_path = os.path.join(script_dir, '../input/flowers/flowers/')
+    training_set_path = os.path.join(script_dir, './input/flowers/flowers/')
+    test_set_path = os.path.join(script_dir, './input/flowers/flowers/')
     batch_size = 128
     input_size = (256, 256)
     train_datagen = ImageDataGenerator(rescale=1. / 255,
