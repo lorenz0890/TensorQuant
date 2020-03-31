@@ -71,18 +71,19 @@ def main():
                                                      subset="training",
                                                      class_mode='categorical')
 
-    test_set = test_datagen.flow_from_directory(test_set_path,
+    validation_set = test_datagen.flow_from_directory(test_set_path,
                                                 target_size=input_size,
                                                 batch_size=batch_size,
                                                 subset="validation",
                                                 class_mode='categorical')
+
     '''dataset = tf_flowers.load_data()
     '''
-    train_data = training_set[0]
-    train_labels = training_set[1]
+    #train_data = training_set[0]
+    #train_labels = training_set[1]
 
-    test_data = test_set[0]
-    test_labels = test_set[1]
+    #test_data = test_set[0]
+    #test_labels = test_set[1]
     '''
     # Reshape the data to a (70000, 28, 28, 1) tensord
     train_data = train_data.reshape([*train_data.shape,3]) / 255.0
@@ -113,22 +114,22 @@ def main():
     #callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
 
     # Train the model
-    alexnet.fit(
-        train_data,
-        train_labels,
-        batch_size = 128,
+    alexnet.fit_generator(
+        train_datagen,
+        steps_per_epoch= training_set.samples // batch_size,
+        validation_data = validation_set // batch_size,
         epochs = 1,
         verbose = 1,
         callbacks=callbacks_list)
 
     # Evaluate the model
-    (loss, accuracy) = alexnet.evaluate(
-        test_data,
-        test_labels,
-        batch_size = 128,
-        verbose = 1)
+    #(loss, accuracy) = alexnet.evaluate(
+    #    test_data,
+    #    test_labels,
+    #    batch_size = 128,
+    #    verbose = 1)
     # Print the model's accuracy
-    print("Test accuracy: %.2f"%(accuracy))
+    #print("Test accuracy: %.2f"%(accuracy))
 
 if __name__ == "__main__":
     main()
