@@ -8,7 +8,7 @@ import os
 #from tensorflow.keras.optimizers import SGD
 #from tensorflow.keras.datasets import tf_flowers
 import numpy as np
-from tensorflow.contrib.keras.api.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.preprocessing.image import ImageDataGenerator
 
 import model
 
