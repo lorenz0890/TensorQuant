@@ -5,9 +5,12 @@
 import tensorflow as tf
 import os
 
-from tensorflow.keras.optimizers import SGD
-from tensorflow.keras.datasets import tf_flowers
+#from tensorflow.keras.optimizers import SGD
+#from tensorflow.keras.datasets import tf_flowers
 import numpy as np
+from tensorflow.contrib.keras.api.keras.callbacks import Callback
+from tensorflow.contrib.keras.api.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.contrib.keras import backend
 
 import model
 
@@ -50,8 +53,30 @@ def main():
     override.weight_q_map={ "Conv1" : "nearest,32,16", "Dense3" : "nearest,32,16"}
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
-    # Download the tf_flowers dataset
-    dataset = tf_flowers.load_data()
+    # Preprocess the flowers dataset
+    script_dir = os.path.dirname(".")
+    training_set_path = os.path.join(script_dir, '../input/flowers/flowers/')
+    test_set_path = os.path.join(script_dir, '../input/flowers/flowers/')
+    batch_size = 128
+    input_size = (256, 256)
+    train_datagen = ImageDataGenerator(rescale=1. / 255,
+                                       shear_range=0.2,
+                                       zoom_range=0.2,
+                                       horizontal_flip=True)
+
+    test_datagen = ImageDataGenerator(rescale=1. / 255, validation_split=0.33)
+    training_set = train_datagen.flow_from_directory(training_set_path,
+                                                     target_size=input_size,
+                                                     batch_size=batch_size,
+                                                     subset="training",
+                                                     class_mode='categorical')
+
+    test_set = test_datagen.flow_from_directory(test_set_path,
+                                                target_size=input_size,
+                                                batch_size=batch_size,
+                                                subset="validation",
+                                                class_mode='categorical')
+    '''dataset = tf_flowers.load_data()
 
     train_data = dataset[0][0]
     train_labels = dataset[0][1]
@@ -69,6 +94,7 @@ def main():
 
     # Transform test labels to one-hot encoding
     test_labels = np.eye(5)[test_labels]
+    '''
 
     alexnet = model.AlexNet()
 
