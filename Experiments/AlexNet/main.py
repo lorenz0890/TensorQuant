@@ -110,7 +110,7 @@ def main():
         metrics = ["accuracy"])
 
     # Callbacks
-    callbacks_list=[]
+    #callbacks_list=[]
     #callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
 
     # Train the model
@@ -118,10 +118,10 @@ def main():
         train_datagen,
         steps_per_epoch= training_set.samples // batch_size,
         validation_steps = validation_set.samples // batch_size,
-        validation_data=validation_set,
+        validation_data= validation_set,
         epochs = 1,
-        verbose = 1,
-        callbacks=callbacks_list)
+        verbose = 1)#,
+        #callbacks=callbacks_list)
 
     # Evaluate the model
     #(loss, accuracy) = alexnet.evaluate(
