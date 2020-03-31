@@ -80,25 +80,6 @@ def main():
                                                 subset="validation",
                                                 class_mode='categorical')
 
-    '''dataset = tf_flowers.load_data()
-    '''
-    #train_data = training_set[0]
-    #train_labels = training_set[1]
-
-    #test_data = test_set[0]
-    #test_labels = test_set[1]
-    '''
-    # Reshape the data to a (70000, 28, 28, 1) tensord
-    train_data = train_data.reshape([*train_data.shape,3]) / 255.0
-
-    test_data = test_data.reshape([*test_data.shape,3]) / 255.0
-
-    # Transform training labels to one-hot encoding
-    train_labels = np.eye(5)[train_labels]
-
-    # Transform test labels to one-hot encoding
-    test_labels = np.eye(5)[test_labels]
-    '''
 
     test_accuracies = list()
     test_losses = list()
