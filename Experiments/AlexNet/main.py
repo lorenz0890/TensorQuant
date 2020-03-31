@@ -122,7 +122,7 @@ def main():
         steps_per_epoch= training_set.samples // batch_size,
         validation_steps = validation_set.samples // batch_size,
         validation_data= validation_set,
-        epochs = 1,
+        epochs = 8,
         verbose = 1)#,
         #callbacks=callbacks_list)
 
