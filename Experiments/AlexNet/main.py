@@ -113,25 +113,24 @@ def main():
         metrics = ["accuracy"])
 
     # Callbacks
-    #callbacks_list=[]
+    callbacks_list=[]
     #callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
 
     # Train the model
-    alexnet.fit_generator(
+    hist = alexnet.fit_generator(
         training_set,
         steps_per_epoch= training_set.samples // batch_size,
         validation_steps = validation_set.samples // batch_size,
         validation_data= validation_set,
-        epochs = 80,
-        verbose = 1)#,
-        #callbacks=callbacks_list)
+        epochs = 1,
+        verbose = 1,
+        callbacks=callbacks_list)
 
     # Evaluate the model
-    #(loss, accuracy) = alexnet.evaluate(
-    #    test_data,
-    #    test_labels,
-    #    batch_size = 128,
-    #    verbose = 1)
+    (loss, accuracy) = alexnet.evaluate(
+        validation_set,
+        steps = validation_set.samples // batch_size,
+        verbose = 1)
     # Print the model's accuracy
     #print("Test accuracy: %.2f"%(accuracy))
 
