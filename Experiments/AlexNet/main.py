@@ -54,6 +54,8 @@ def main():
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
     # Preprocess the flowers dataset
+    # Source:
+    # https://www.kaggle.com/anandsingh1011/flower-recognition-model-in-keras/data
     script_dir = os.path.dirname(".")
     training_set_path = os.path.join(script_dir, '../input/flowers/flowers/')
     test_set_path = os.path.join(script_dir, '../input/flowers/flowers/')
