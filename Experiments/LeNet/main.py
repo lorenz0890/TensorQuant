@@ -49,7 +49,7 @@ def main():
     #override.extr_q_map={"Conv1" : "nearest,12,11"}
     #override.weight_q_map={ "Dense4" : "nearest,16,8"}
 
-    override.weight_q_map = {"Dense3": "binary"}
+    override.weight_q_map = {"Dense4": "binary"}
 
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
