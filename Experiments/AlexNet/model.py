@@ -18,7 +18,7 @@ def AlexNet():
                 kernel_size = (11, 11),
                 strides = (4, 4),
                 padding = "valid",
-                input_shape = (224, 224, 3),
+                input_shape = (256, 256, 3),
                 activation = "relu",
                 name = "Conv1"))
 
