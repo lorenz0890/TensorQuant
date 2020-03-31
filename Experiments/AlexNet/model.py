@@ -95,7 +95,7 @@ def AlexNet():
                 name="Dense2"))
 
             # Add a fully-connected output layer
-            model.add(Dense(1000,
+            model.add(Dense(5,
                 activation="softmax",
                 name="Dense3"))
     return model
