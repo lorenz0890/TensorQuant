@@ -8,7 +8,7 @@ import os
 #from tensorflow.keras.optimizers import SGD
 #from tensorflow.keras.datasets import tf_flowers
 import numpy as np
-from tensorflow.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 import model
 
@@ -77,13 +77,13 @@ def main():
                                                 subset="validation",
                                                 class_mode='categorical')
     '''dataset = tf_flowers.load_data()
+    '''
+    train_data = training_set[0]
+    train_labels = training_set[1]
 
-    train_data = dataset[0][0]
-    train_labels = dataset[0][1]
-
-    test_data = dataset[1][0]
-    test_labels = dataset[1][1]
-
+    test_data = test_set[0]
+    test_labels = test_set[1]
+    '''
     # Reshape the data to a (70000, 28, 28, 1) tensord
     train_data = train_data.reshape([*train_data.shape,3]) / 255.0
 
