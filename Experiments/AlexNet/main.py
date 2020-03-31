@@ -101,7 +101,7 @@ def main():
         #callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
 
         # Train the model
-        hist = alexnet.fit_generator(
+        hist = alexnet.fit_generator( #history can later be used to get convergence rates
             training_set,
             steps_per_epoch= training_set.samples // batch_size,
             validation_steps = validation_set.samples // batch_size,
