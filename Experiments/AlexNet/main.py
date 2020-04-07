@@ -19,20 +19,21 @@ def main():
     # Control which devices TF sees. '-1' = None, '0', '1','2,'3'...PCI Bus ID
     # https://www.tensorflow.org/guide/gpu
     # https://github.com/tensorflow/tensorflow/issues/24496
-    #os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-    os.environ['CUDA_VISIBLE_DEVICES'] = '1,2,3'
+    os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+    os.environ['CUDA_VISIBLE_DEVICES'] = '3'
 
     # Controll how much and how TF allocates GPU memory
     # https://www.tensorflow.org/guide/gpu
     # https://medium.com/@starriet87/tensorflow-2-0-wanna-limit-gpu-memory-10ad474e2528
     # Option 1: Allow memory growth. This means at the beginning, only a tiny fraction allocated, but memory consumption grows with process
     gpus = tf.config.experimental.list_physical_devices('GPU')
-    if gpus:
-        try:
-            for gpu in gpus:
-                tf.config.experimental.set_memory_growth(gpu, True)
-        except RuntimeError as e:
-            print(e)
+    print(gpus) 
+#if gpus:
+    #    try:
+    #        for gpu in gpus:
+    #            tf.config.experimental.set_memory_growth(gpu, True)
+    #    except RuntimeError as e:
+    #        print(e)
 
     # Option 2: set a limit on what TF trys to allocate per process
     #gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -48,7 +49,7 @@ def main():
     # Make sure the overrides are set before the model is created!
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
     #override.extr_q_map={"Conv1" : "nearest,12,11"}
-    override.weight_q_map={ "MaxPool1" : "nearest,16,8"}
+    #override.weight_q_map={ "Conv1" : "nearest,16,8"}
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
     # Preprocess the flowers dataset
@@ -57,8 +58,8 @@ def main():
     script_dir = os.path.dirname(".")
     training_set_path = os.path.join(script_dir, './input/flowers/flowers/')
     test_set_path = os.path.join(script_dir, './input/flowers/flowers/')
-    batch_size = 128
-    num_epochs = 64
+    batch_size = 16
+    num_epochs = 80
     input_size = (256, 256)
 
     train_datagen = ImageDataGenerator(rescale=1. / 255,
@@ -86,7 +87,7 @@ def main():
     test_losses = list()
     avg_hist_acc = None
     avg_hist_acc_val = None
-    for i in range(100):
+    for i in range(10):
         alexnet = model.AlexNet()
 
         alexnet.summary()
@@ -124,11 +125,11 @@ def main():
         test_losses.append(loss)
 
         if avg_hist_acc is None and avg_hist_acc_val is None:
-            avg_hist_acc = hist['accuracies']
-            avg_hist_acc_val = hist['val_accuracy']
+            avg_hist_acc = hist.history['accuracy']
+            avg_hist_acc_val = hist.history['val_accuracy']
         else:
-            avg_hist_acc = list(map(add, avg_hist_acc, hist['accuracies']))
-            avg_hist_acc_val = list(map(add, avg_hist_acc, hist['val_accuracy']))
+            avg_hist_acc = list(map(add, avg_hist_acc, hist.history['accuracy']))
+            avg_hist_acc_val = list(map(add, avg_hist_acc, hist.history['val_accuracy']))
 
     avg_hist_acc = [x * 1/num_epochs for x in avg_hist_acc]
     avg_hist_acc_val = [x * 1 / num_epochs for x in avg_hist_acc_val]
@@ -139,12 +140,12 @@ def main():
     trimmed_mean_accuracy = 0
     trimmed_mean_loss = 0
 
-    for i in range(2, 97):
+    for i in range(1, 9):
         trimmed_mean_accuracy += test_accuracies[i]
         trimmed_mean_loss += test_losses[i]
 
-    trimmed_mean_accuracy /= 95
-    trimmed_mean_loss /= 95
+    trimmed_mean_accuracy /= 8
+    trimmed_mean_loss /= 8
 
     print('Test history avg, acc, val_acc')
     print(avg_hist_acc)
