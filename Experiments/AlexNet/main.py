@@ -9,7 +9,7 @@ import os
 #from tensorflow.keras.datasets import tf_flowers
 import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-
+from operator import add
 import model
 
 # Add this for TensorQuant
@@ -20,7 +20,7 @@ def main():
     # https://www.tensorflow.org/guide/gpu
     # https://github.com/tensorflow/tensorflow/issues/24496
     #os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-    #os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '1,2,3'
 
     # Controll how much and how TF allocates GPU memory
     # https://www.tensorflow.org/guide/gpu
@@ -57,7 +57,8 @@ def main():
     script_dir = os.path.dirname(".")
     training_set_path = os.path.join(script_dir, './input/flowers/flowers/')
     test_set_path = os.path.join(script_dir, './input/flowers/flowers/')
-    batch_size = 64
+    batch_size = 128
+    num_epochs = 64
     input_size = (256, 256)
 
     train_datagen = ImageDataGenerator(rescale=1. / 255,
@@ -83,6 +84,8 @@ def main():
 
     test_accuracies = list()
     test_losses = list()
+    avg_hist_acc = None
+    avg_hist_acc_val = None
     for i in range(100):
         alexnet = model.AlexNet()
 
@@ -106,7 +109,7 @@ def main():
             steps_per_epoch= training_set.samples // batch_size,
             validation_steps = validation_set.samples // batch_size,
             validation_data= validation_set,
-            epochs = 80,
+            epochs = num_epochs,
             verbose = 1,
             callbacks=callbacks_list)
 
@@ -119,6 +122,16 @@ def main():
         # print("Test accuracy: %.2f"%(accuracy))
         test_accuracies.append(accuracy)
         test_losses.append(loss)
+
+        if avg_hist_acc is None and avg_hist_acc_val is None:
+            avg_hist_acc = hist['accuracies']
+            avg_hist_acc_val = hist['val_accuracy']
+        else:
+            avg_hist_acc = list(map(add, avg_hist_acc, hist['accuracies']))
+            avg_hist_acc_val = list(map(add, avg_hist_acc, hist['val_accuracy']))
+
+    avg_hist_acc = [x * 1/num_epochs for x in avg_hist_acc]
+    avg_hist_acc_val = [x * 1 / num_epochs for x in avg_hist_acc_val]
 
     test_accuracies, test_losses = (list(x) for x in
                                     zip(*sorted(zip(test_accuracies, test_losses), key=lambda pair: pair[0])))
@@ -133,6 +146,11 @@ def main():
     trimmed_mean_accuracy /= 95
     trimmed_mean_loss /= 95
 
+    print('Test history avg, acc, val_acc')
+    print(avg_hist_acc)
+    print(avg_hist_acc_val)
+
+    print('Test accuracies avg, acc, loss')
     print(test_accuracies)
     print(test_losses)
 
