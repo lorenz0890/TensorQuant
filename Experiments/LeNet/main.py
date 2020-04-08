@@ -135,7 +135,7 @@ def main():
             avg_hist_acc_val = hist.history['val_accuracy']
         else:
             avg_hist_acc = list(map(add, avg_hist_acc, hist.history['accuracy']))
-            avg_hist_acc_val = list(map(add, avg_hist_acc, hist.history['val_accuracy']))
+            avg_hist_acc_val = list(map(add, avg_hist_acc_val, hist.history['val_accuracy']))
 
     avg_hist_acc = [x * 1 / num_epochs for x in avg_hist_acc]
     avg_hist_acc_val = [x * 1 / num_epochs for x in avg_hist_acc_val]
