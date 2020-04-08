@@ -4,6 +4,7 @@
 # LeNet for MNIST using Keras and TensorFlow
 import tensorflow as tf
 import os
+from operator import add
 
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.datasets import mnist
@@ -53,6 +54,9 @@ def main():
 
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
+    # Global Variable num_epochs
+    num_epochs = 80
+
     # Download the MNIST dataset
     dataset = mnist.load_data()
 
@@ -75,7 +79,11 @@ def main():
 
     test_accuracies = list()
     test_losses = list()
-    for i in range(100):
+    avg_hist_acc = None
+    avg_hist_acc_val = None
+
+
+    for i in range(10):
         lenet = model.LeNet()
 
         lenet.summary()
@@ -93,11 +101,11 @@ def main():
         # callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
 
         # Train the model
-        lenet.fit(
+        hist = lenet.fit(
             train_data,
             train_labels,
             batch_size=128,
-            epochs=1,
+            epochs=num_epochs,
             verbose=1,
             callbacks=callbacks_list)
 
@@ -111,19 +119,37 @@ def main():
         test_accuracies.append(accuracy)
         test_losses.append(loss)
 
+        if avg_hist_acc is None and avg_hist_acc_val is None:
+            avg_hist_acc = hist.history['accuracy']
+            avg_hist_acc_val = hist.history['val_accuracy']
+        else:
+            avg_hist_acc = list(map(add, avg_hist_acc, hist.history['accuracy']))
+            avg_hist_acc_val = list(map(add, avg_hist_acc, hist.history['val_accuracy']))
+
+    avg_hist_acc = [x * 1 / num_epochs for x in avg_hist_acc]
+    avg_hist_acc_val = [x * 1 / num_epochs for x in avg_hist_acc_val]
+
     test_accuracies, test_losses = (list(x) for x in
                                     zip(*sorted(zip(test_accuracies, test_losses), key=lambda pair: pair[0])))
 
     trimmed_mean_accuracy = 0
     trimmed_mean_loss = 0
 
-    for i in range(2, 97):
+    for i in range(1, 9):
         trimmed_mean_accuracy += test_accuracies[i]
         trimmed_mean_loss += test_losses[i]
 
-    trimmed_mean_accuracy /= 95
-    trimmed_mean_loss /= 95
+    trimmed_mean_accuracy /= 8
+    trimmed_mean_loss /= 8
 
+    print(test_accuracies)
+    print(test_losses)
+
+    print('Test history avg, acc, val_acc')
+    print(avg_hist_acc)
+    print(avg_hist_acc_val)
+
+    print('Test accuracies avg, acc, loss')
     print(test_accuracies)
     print(test_losses)
 
