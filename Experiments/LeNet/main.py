@@ -11,6 +11,8 @@ from tensorflow.keras.datasets import mnist
 import numpy as np
 
 import model
+import timeit
+
 
 # Add this for TensorQuant
 from TensorQuant.Quantize import override
@@ -79,6 +81,7 @@ def main():
 
     test_accuracies = list()
     test_losses = list()
+    test_time = list()
     avg_hist_acc = None
     avg_hist_acc_val = None
 
@@ -100,6 +103,9 @@ def main():
         callbacks_list = []
         # callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
 
+        # Start Timer
+        start = timeit.default_timer()
+
         # Train the model
         hist = lenet.fit(
             train_data,
@@ -109,6 +115,10 @@ def main():
             validation_split=0.33,
             verbose=1,
             callbacks=callbacks_list)
+
+        stop = timeit.default_timer()
+
+        test_time.append(stop - start)
 
         # Evaluate the model
         (loss, accuracy) = lenet.evaluate(
@@ -130,21 +140,25 @@ def main():
     avg_hist_acc = [x * 1 / num_epochs for x in avg_hist_acc]
     avg_hist_acc_val = [x * 1 / num_epochs for x in avg_hist_acc_val]
 
-    test_accuracies, test_losses = (list(x) for x in
-                                    zip(*sorted(zip(test_accuracies, test_losses), key=lambda pair: pair[0])))
+    test_accuracies, test_losses, test_time = (list(x) for x in
+                                    zip(*sorted(zip(test_accuracies, test_losses, test_time), key=lambda pair: pair[0])))
 
     trimmed_mean_accuracy = 0
     trimmed_mean_loss = 0
+    trimmed_mean_time = 0
 
     for i in range(1, 9):
         trimmed_mean_accuracy += test_accuracies[i]
         trimmed_mean_loss += test_losses[i]
+        trimmed_mean_time += test_time[i]
 
     trimmed_mean_accuracy /= 8
     trimmed_mean_loss /= 8
+    trimmed_mean_time /= 8
 
     print(test_accuracies)
     print(test_losses)
+    print(test_time)
 
     print('Test history avg, acc, val_acc')
     print(avg_hist_acc)
@@ -158,6 +172,7 @@ def main():
 
     print(trimmed_mean_accuracy)
     print(trimmed_mean_loss)
+    print(trimmed_mean_time)
 
 if __name__ == "__main__":
     main()
