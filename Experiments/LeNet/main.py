@@ -50,7 +50,7 @@ def main():
     #override.extr_q_map={"Conv1" : "nearest,12,11"}
     #override.weight_q_map={ "Dense4" : "nearest,16,8"}
 
-    override.weight_q_map = {"Conv1": "binary", "MaxPool1": "binary", "Conv2": "binary", "MaxPool2": "binary", "Dense3": "binary", "Dense4": "binary"}
+    #override.weight_q_map = {"Conv1": "binary", "MaxPool1": "binary", "Conv2": "binary", "MaxPool2": "binary", "Dense3": "binary", "Dense4": "binary"}
 
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
@@ -106,6 +106,7 @@ def main():
             train_labels,
             batch_size=128,
             epochs=num_epochs,
+            validation_split=0.33,
             verbose=1,
             callbacks=callbacks_list)
 
@@ -152,6 +153,8 @@ def main():
     print('Test accuracies avg, acc, loss')
     print(test_accuracies)
     print(test_losses)
+
+    print(hist.history.keys())
 
     print(trimmed_mean_accuracy)
     print(trimmed_mean_loss)
