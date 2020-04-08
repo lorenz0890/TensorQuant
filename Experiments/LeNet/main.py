@@ -59,7 +59,7 @@ def main():
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
     # Global Variable num_epochs, num_runs
-    num_epochs = 1
+    num_epochs = 80
     num_runs = 10
     # Download the MNIST dataset
     dataset = mnist.load_data()
