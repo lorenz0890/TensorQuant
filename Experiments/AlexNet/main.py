@@ -20,7 +20,7 @@ def main():
     # https://www.tensorflow.org/guide/gpu
     # https://github.com/tensorflow/tensorflow/issues/24496
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-    os.environ['CUDA_VISIBLE_DEVICES'] = '3'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '2,3,4'
 
     # Controll how much and how TF allocates GPU memory
     # https://www.tensorflow.org/guide/gpu
@@ -58,7 +58,7 @@ def main():
     script_dir = os.path.dirname(".")
     training_set_path = os.path.join(script_dir, './input/flowers/flowers/')
     test_set_path = os.path.join(script_dir, './input/flowers/flowers/')
-    batch_size = 16
+    batch_size = 128
     num_epochs = 80
     input_size = (256, 256)
 
