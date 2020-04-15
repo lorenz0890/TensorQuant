@@ -19,15 +19,15 @@ def main():
     # Control which devices TF sees. '-1' = None, '0', '1','2,'3'...PCI Bus ID
     # https://www.tensorflow.org/guide/gpu
     # https://github.com/tensorflow/tensorflow/issues/24496
-    os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-    os.environ['CUDA_VISIBLE_DEVICES'] = '2,3,4'
+    # os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+    # os.environ['CUDA_VISIBLE_DEVICES'] = '2,3,4'
 
     # Controll how much and how TF allocates GPU memory
     # https://www.tensorflow.org/guide/gpu
     # https://medium.com/@starriet87/tensorflow-2-0-wanna-limit-gpu-memory-10ad474e2528
     # Option 1: Allow memory growth. This means at the beginning, only a tiny fraction allocated, but memory consumption grows with process
-    gpus = tf.config.experimental.list_physical_devices('GPU')
-    print(gpus) 
+    # gpus = tf.config.experimental.list_physical_devices('GPU')
+    # print(gpus)
 #if gpus:
     #    try:
     #        for gpu in gpus:
@@ -68,7 +68,7 @@ def main():
                                        horizontal_flip=True,
                                        validation_split=0.33)
 
-    test_datagen = ImageDataGenerator(rescale=1. / 255, validation_split=0.33)
+    #test_datagen = ImageDataGenerator(rescale=1. / 255, validation_split=0.33)
 
     training_set = train_datagen.flow_from_directory(training_set_path,
                                                      target_size=input_size,
@@ -85,6 +85,7 @@ def main():
 
     test_accuracies = list()
     test_losses = list()
+    test_time = list()
     avg_hist_acc = None
     avg_hist_acc_val = None
     for i in range(10):
@@ -104,6 +105,8 @@ def main():
         callbacks_list=[]
         #callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
 
+        start = timeit.default_timer()
+
         # Train the model
         hist = alexnet.fit_generator( #history can later be used to get convergence rates
             training_set,
@@ -113,6 +116,9 @@ def main():
             epochs = num_epochs,
             verbose = 1,
             callbacks=callbacks_list)
+
+        stop = timeit.default_timer()
+        test_time.append(stop - start)
 
         # Evaluate the model
         (loss, accuracy) = alexnet.evaluate(
@@ -139,24 +145,40 @@ def main():
 
     trimmed_mean_accuracy = 0
     trimmed_mean_loss = 0
+    trimmed_mean_time = 0
 
     for i in range(1, 9):
         trimmed_mean_accuracy += test_accuracies[i]
         trimmed_mean_loss += test_losses[i]
+        trimmed_mean_time += test_time[i]
+        trimmed_mean_time = 0
 
     trimmed_mean_accuracy /= 8
     trimmed_mean_loss /= 8
+    trimmed_mean_time /= 8
 
-    print('Test history avg, acc, val_acc')
-    print(avg_hist_acc)
-    print(avg_hist_acc_val)
+    results = {}
+    results['eval_accuracies'] = test_accuracies
+    results['eval_losses'] = test_losses
+    results['eval_trimmed_mean_accuracy'] = trimmed_mean_accuracy
+    results['eval_trimmed_mean_loss'] = trimmed_mean_loss
+    results['avg_train_trimmed_mean_time'] = trimmed_mean_time
+    results['avg_train_hist_acc'] = avg_hist_acc
+    results['avg_train_hist_acc_val'] = avg_hist_acc_val
 
-    print('Test accuracies avg, acc, loss')
-    print(test_accuracies)
-    print(test_losses)
+    with open('/storage/results.pkl', 'wb') as fp:
+        pickle.dump(results, fp)
 
-    print(trimmed_mean_accuracy)
-    print(trimmed_mean_loss)
+    #print('Test history avg, acc, val_acc')
+    #print(avg_hist_acc)
+    #print(avg_hist_acc_val)
+
+    #print('Test accuracies avg, acc, loss')
+    #print(test_accuracies)
+    #print(test_losses)
+
+    #print(trimmed_mean_accuracy)
+    #print(trimmed_mean_loss)
 
 if __name__ == "__main__":
     main()
