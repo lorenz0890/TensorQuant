@@ -23,8 +23,8 @@ def main():
     # Control which devices TF sees. '-1' = None, '0', '1','2,'3'...PCI Bus ID
     # https://www.tensorflow.org/guide/gpu
     # https://github.com/tensorflow/tensorflow/issues/24496
-    os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-    os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+    #os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+    #os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
     # Controll how much and how TF allocates GPU memory
     # https://www.tensorflow.org/guide/gpu
@@ -52,14 +52,14 @@ def main():
     # Make sure the overrides are set before the model is created!
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
     #override.extr_q_map={"Conv1" : "nearest,12,11"}
-    #override.weight_q_map={ "Dense4" : "nearest,16,8"}
+    override.weight_q_map={ "Dense4" : "nearest,16,6"}
 
     #override.weight_q_map = {"Conv1": "binary", "MaxPool1": "binary", "Conv2": "binary", "MaxPool2": "binary", "Dense3": "binary", "Dense4": "binary"}
 
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
     # Global Variable num_epochs, num_runs
-    num_epochs = 1
+    num_epochs = 80
     num_runs = 10
     # Download the MNIST dataset
     dataset = mnist.load_data()
@@ -137,7 +137,7 @@ def main():
             avg_hist_acc_val = hist.history['val_accuracy']
         else:
             avg_hist_acc = list(map(add, avg_hist_acc, hist.history['accuracy']))
-            avg_hist_acc_val = list(map(add, avg_hist_acc, hist.history['val_accuracy']))
+            avg_hist_acc_val = list(map(add, avg_hist_acc_val, hist.history['val_accuracy']))
 
     avg_hist_acc = [x * (1 / num_runs) for x in avg_hist_acc]
     avg_hist_acc_val = [x * (1 / num_runs) for x in avg_hist_acc_val]
