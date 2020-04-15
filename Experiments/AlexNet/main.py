@@ -11,6 +11,7 @@ import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from operator import add
 import model
+import timeit
 
 # Add this for TensorQuant
 from TensorQuant.Quantize import override
