@@ -9,8 +9,11 @@ import os
 #from tensorflow.keras.datasets import tf_flowers
 import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
 from operator import add
 import model
+
+import pickle
 import timeit
 
 # Add this for TensorQuant
