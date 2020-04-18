@@ -64,6 +64,7 @@ def main():
     test_set_path = os.path.join(script_dir, './input/flowers/flowers/')
     batch_size = 128
     num_epochs = 80
+    num_runs = 10
     input_size = (256, 256)
 
     train_datagen = ImageDataGenerator(rescale=1. / 255,
@@ -141,8 +142,8 @@ def main():
             avg_hist_acc = list(map(add, avg_hist_acc, hist.history['accuracy']))
             avg_hist_acc_val = list(map(add, avg_hist_acc, hist.history['val_accuracy']))
 
-    avg_hist_acc = [x * 1/num_epochs for x in avg_hist_acc]
-    avg_hist_acc_val = [x * 1 / num_epochs for x in avg_hist_acc_val]
+    avg_hist_acc = [x * 1/num_runs for x in avg_hist_acc]
+    avg_hist_acc_val = [x * 1 / num_runs for x in avg_hist_acc_val]
 
     test_accuracies, test_losses = (list(x) for x in
                                     zip(*sorted(zip(test_accuracies, test_losses), key=lambda pair: pair[0])))
@@ -155,7 +156,7 @@ def main():
         trimmed_mean_accuracy += test_accuracies[i]
         trimmed_mean_loss += test_losses[i]
         trimmed_mean_time += test_time[i]
-        trimmed_mean_time = 0
+        trimmed_mean_time = test_time[i]
 
     trimmed_mean_accuracy /= 8
     trimmed_mean_loss /= 8
