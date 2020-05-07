@@ -13,4 +13,4 @@ RUN make all
 WORKDIR /app
 
 ENV PYTHONPATH=${PYTHONPATH}:./
-CMD ["python", "./TensorQuant/Examples/LeNet/main.py"]
+CMD ["python", "./TensorQuant/Examples/LeNetFlowers/main.py"]
