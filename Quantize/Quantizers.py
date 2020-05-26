@@ -1,6 +1,7 @@
 from TensorQuant.Quantize import FixedPoint
 from TensorQuant.Quantize import QuantKernelWrapper as Wrapped
 import tensorflow as tf
+import time
 
 class Quantizer_if():
     """Interface for quantizer classes"""
@@ -78,6 +79,7 @@ class FixedPointQuantizer_nearest(Quantizer_if):
         return FixedPoint.round_nearest(tensor,self.fixed_size,self.fixed_prec)
 
     def quantize(self,tensor):
+        t0 = time.time()
         @tf.custom_gradient
         def op(tensor):
             def grad(dy):
@@ -88,6 +90,8 @@ class FixedPointQuantizer_nearest(Quantizer_if):
             # tag output
             out = tf.identity(out, name=str(self)+"_output")
             return out, grad
+
+        print(time.time() - t0)
         return op(tensor)
 
 
