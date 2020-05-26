@@ -46,8 +46,8 @@ def main():
     # TensorQuant
     # Make sure the overrides are set before the model is created!
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-    override.extr_q_map={"Conv1" : "nearest,12,11"}
-    override.weight_q_map={ "Conv1" : "nearest,32,16", "Dense3" : "nearest,32,16"}
+    #override.extr_q_map={"Conv1" : "nearest,16,8"}
+    override.weight_q_map={ "Conv1" : "nearest,16,8"}
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
     # Download the MNIST dataset
@@ -70,16 +70,12 @@ def main():
     # Tranform test labels to one-hot encoding
     test_labels = np.eye(10)[test_labels]
 
-    test_accuracies = list()
-    test_losses = list()
-
-    for i in range(100):
+    with open('/storage/timing.csv', 'w') as fd: #clear timing
+        fd.write('')
+    for i in range(0, 2):  # loop for some testing
         lenet = model.LeNet()
-
         lenet.summary()
-
         optimizer = tf.keras.optimizers.SGD(lr=0.01)
-
         # Compile the network
         lenet.compile(
             loss = "categorical_crossentropy",
@@ -95,7 +91,7 @@ def main():
             train_data,
             train_labels,
             batch_size = 128,
-            epochs = 1,
+            epochs = 10,
             verbose = 1,
             callbacks=callbacks_list)
 
@@ -105,27 +101,8 @@ def main():
             test_labels,
             batch_size = 128,
             verbose = 1)
-        # Push the model's accuracy in list
-        test_accuracies.append(accuracy)
-        test_losses.append(loss)
-
-    test_accuracies, test_losses = (list(x) for x in zip(*sorted(zip(test_accuracies, test_losses), key=lambda pair: pair[0])))
-
-    trimmed_mean_accuracy = 0
-    trimmed_mean_loss = 0
-
-    for i in range(2,98):
-        trimmed_mean_accuracy += test_accuracies[i]
-        trimmed_mean_loss += test_losses[i]
-
-    trimmed_mean_accuracy /= 95
-    trimmed_mean_loss /= 95
-
-    print(test_accuracies)
-    print(test_losses)
-
-    print(trimmed_mean_accuracy)
-    print(trimmed_mean_loss)
+        # Print the model's accuracy
+        print("Test accuracy: %.2f"%(accuracy))
 
 if __name__ == "__main__":
-        main()
+    main()
