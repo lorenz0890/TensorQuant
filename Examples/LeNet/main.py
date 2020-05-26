@@ -91,7 +91,7 @@ def main():
         train_data,
         train_labels,
         batch_size = 128,
-        epochs = 1,
+        epochs = 10,
         verbose = 1,
         callbacks=callbacks_list)
 
