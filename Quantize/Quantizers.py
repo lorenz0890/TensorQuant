@@ -79,10 +79,9 @@ class FixedPointQuantizer_nearest(Quantizer_if):
         return FixedPoint.round_nearest(tensor,self.fixed_size,self.fixed_prec)
 
     def quantize(self,tensor):
-
+        t0 = time.time()
         @tf.custom_gradient
         def op(tensor):
-            t0 = time.time()
             def grad(dy):
                 return dy
             out =  tf.math.floor( tf.math.abs(tensor)*(1<<self.fixed_prec)+0.5) /(1<<self.fixed_prec) * tf.math.sign(tensor)
@@ -90,9 +89,11 @@ class FixedPointQuantizer_nearest(Quantizer_if):
             out = tf.math.maximum( tf.math.minimum( out, self.fixed_max_signed ), self.fixed_min_signed)
             # tag output
             out = tf.identity(out, name=str(self)+"_output")
-            print(time.time() - t0)
             return out, grad
-        return op(tensor)
+
+        qtensor = op(tensor)
+        print(time.time() - t0)
+        return qtensor
 
 
 class FixedPointQuantizer_stochastic(Quantizer_if):
