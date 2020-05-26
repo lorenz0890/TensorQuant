@@ -93,6 +93,9 @@ def main():
     test_time = list()
     avg_hist_acc = None
     avg_hist_acc_val = None
+
+    with open('/storage/timing.csv', 'w') as fd: #clear timing
+        fd.write('')
     for i in range(10):
         lentnet = model.LeNet()
 
