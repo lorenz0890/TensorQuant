@@ -46,8 +46,8 @@ def main():
     # TensorQuant
     # Make sure the overrides are set before the model is created!
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-    override.extr_q_map={"Conv1" : "nearest,16,8"}
-    #override.weight_q_map={ "Conv1" : "nearest,16,8"}
+    #override.extr_q_map={"Conv1" : "nearest,16,8"}
+    override.weight_q_map={ "Conv1" : "nearest,16,8"}
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
     # Download the MNIST dataset
