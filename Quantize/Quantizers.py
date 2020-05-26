@@ -95,7 +95,7 @@ class FixedPointQuantizer_nearest(Quantizer_if):
         qtensor = op(tensor)
         qtime = time.time() - t0
         with open('/storage/nearest_timing.csv', 'a') as fd:
-            fd.write(str(qtime))
+            fd.write(str(qtime)+',')
         return qtensor
 
 
@@ -256,5 +256,5 @@ class NoQuantizer(Quantizer_if):
         t0 = time.time()
         qtime = time.time() - t0
         with open('/storage/noq_timing.csv', 'a') as fd:
-            fd.write(str(qtime))
+            fd.write(str(qtime)+',')
         return tensor
