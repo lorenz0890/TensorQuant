@@ -88,7 +88,9 @@ def main():
     avg_hist_acc_val = None
 
 
-    for i in range(10):
+    with open('/storage/timing.csv', 'w') as fd: #clear timing
+        fd.write('')
+    for i in range(num_runs):
         lenet = model.LeNet()
 
         lenet.summary()
