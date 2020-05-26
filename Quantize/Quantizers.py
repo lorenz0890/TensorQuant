@@ -94,7 +94,7 @@ class FixedPointQuantizer_nearest(Quantizer_if):
 
         qtensor = op(tensor)
         qtime = time.time() - t0
-        with open('/storage/nearest_timing.csv', 'a') as fd:
+        with open('/storage/timing.csv', 'a') as fd:
             fd.write(str(qtime)+',')
         return qtensor
 
@@ -206,6 +206,7 @@ class BinaryQuantizer(Quantizer_if):
     def C_quantize(self,tensor):
         return Wrapped.quant_binary(tensor, self.marginal)
     def quantize(self, tensor):
+        t0 = time.time()
         @tf.custom_gradient
         def op(tensor):
             def grad(dy):
@@ -213,7 +214,12 @@ class BinaryQuantizer(Quantizer_if):
             out = (tf.dtypes.cast(tf.greater_equal(tensor,0),tensor.dtype)*2-1)*self.marginal
             out = tf.identity(out, name=str(self)+"_output")
             return out, grad
-        return op(tensor)
+
+        qtensor = op(tensor)
+        qtime = time.time() - t0
+        with open('/storage/timing.csv', 'a') as fd:
+            fd.write(str(qtime) + ',')
+        return qtensor
 
 ###############################
 ### Ternary
@@ -255,6 +261,6 @@ class NoQuantizer(Quantizer_if):
     def quantize(self,tensor):
         t0 = time.time()
         qtime = time.time() - t0
-        with open('/storage/noq_timing.csv', 'a') as fd:
+        with open('/storage/timing.csv', 'a') as fd:
             fd.write(str(qtime)+',')
         return tensor

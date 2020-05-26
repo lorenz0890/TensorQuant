@@ -70,13 +70,12 @@ def main():
     # Tranform test labels to one-hot encoding
     test_labels = np.eye(10)[test_labels]
 
-    lenet = model.LeNet()
-
-    lenet.summary()
-
-    optimizer = tf.keras.optimizers.SGD(lr=0.01)
-
-    for i in range(0,2): # loop for some testing
+    with open('/storage/timing.csv', 'w') as fd: #clear timing
+        fd.write('')
+    for i in range(0, 2):  # loop for some testing
+        lenet = model.LeNet()
+        lenet.summary()
+        optimizer = tf.keras.optimizers.SGD(lr=0.01)
         # Compile the network
         lenet.compile(
             loss = "categorical_crossentropy",
