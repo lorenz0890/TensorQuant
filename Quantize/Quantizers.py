@@ -2,6 +2,7 @@ from TensorQuant.Quantize import FixedPoint
 from TensorQuant.Quantize import QuantKernelWrapper as Wrapped
 import tensorflow as tf
 import time
+import csv
 
 class Quantizer_if():
     """Interface for quantizer classes"""
@@ -92,7 +93,9 @@ class FixedPointQuantizer_nearest(Quantizer_if):
             return out, grad
 
         qtensor = op(tensor)
-        print(time.time() - t0)
+        qtime = time.time() - t0
+        with open('nearest_timing.csv', 'a') as fd:
+            fd.write(qtime)
         return qtensor
 
 
