@@ -76,33 +76,34 @@ def main():
 
     optimizer = tf.keras.optimizers.SGD(lr=0.01)
 
-    # Compile the network
-    lenet.compile(
-        loss = "categorical_crossentropy",
-        optimizer = optimizer,
-        metrics = ["accuracy"])
+    for i in range(0,2): # loop for some testing
+        # Compile the network
+        lenet.compile(
+            loss = "categorical_crossentropy",
+            optimizer = optimizer,
+            metrics = ["accuracy"])
 
-    # Callbacks
-    callbacks_list=[]
-    #callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
+        # Callbacks
+        callbacks_list=[]
+        #callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
 
-    # Train the model
-    lenet.fit(
-        train_data,
-        train_labels,
-        batch_size = 128,
-        epochs = 10,
-        verbose = 1,
-        callbacks=callbacks_list)
+        # Train the model
+        lenet.fit(
+            train_data,
+            train_labels,
+            batch_size = 128,
+            epochs = 80,
+            verbose = 1,
+            callbacks=callbacks_list)
 
-    # Evaluate the model
-    (loss, accuracy) = lenet.evaluate(
-        test_data,
-        test_labels,
-        batch_size = 128,
-        verbose = 1)
-    # Print the model's accuracy
-    print("Test accuracy: %.2f"%(accuracy))
+        # Evaluate the model
+        (loss, accuracy) = lenet.evaluate(
+            test_data,
+            test_labels,
+            batch_size = 128,
+            verbose = 1)
+        # Print the model's accuracy
+        print("Test accuracy: %.2f"%(accuracy))
 
 if __name__ == "__main__":
     main()
