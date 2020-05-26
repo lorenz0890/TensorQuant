@@ -95,7 +95,7 @@ class FixedPointQuantizer_nearest(Quantizer_if):
         qtensor = op(tensor)
         qtime = time.time() - t0
         with open('nearest_timing.csv', 'a') as fd:
-            fd.write(qtime)
+            fd.write(str(qtime))
         return qtensor
 
 
@@ -253,4 +253,8 @@ class TernaryQuantizer(Quantizer_if):
 class NoQuantizer(Quantizer_if):
     """Applies no quantization to the tensor"""
     def quantize(self,tensor):
+        t0 = time.time()
+        qtime = time.time() - t0
+        with open('nearest_timing.csv', 'a') as fd:
+            fd.write(str(qtime))
         return tensor
