@@ -80,6 +80,7 @@ class FixedPointQuantizer_nearest(Quantizer_if):
         return FixedPoint.round_nearest(tensor,self.fixed_size,self.fixed_prec)
 
     def quantize(self,tensor):
+        print('quantize')
         t0 = time.time()
         @tf.custom_gradient
         def op(tensor):
@@ -206,6 +207,7 @@ class BinaryQuantizer(Quantizer_if):
     def C_quantize(self,tensor):
         return Wrapped.quant_binary(tensor, self.marginal)
     def quantize(self, tensor):
+        print('quantize')
         t0 = time.time()
         @tf.custom_gradient
         def op(tensor):
@@ -259,6 +261,7 @@ class TernaryQuantizer(Quantizer_if):
 class NoQuantizer(Quantizer_if):
     """Applies no quantization to the tensor"""
     def quantize(self,tensor):
+        print('quantize')
         t0 = time.time()
         qtime = time.time() - t0
         with open('/storage/timing.csv', 'a') as fd:
