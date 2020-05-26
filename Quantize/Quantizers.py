@@ -1,6 +1,8 @@
 from TensorQuant.Quantize import FixedPoint
 from TensorQuant.Quantize import QuantKernelWrapper as Wrapped
 import tensorflow as tf
+import time
+import csv
 
 class Quantizer_if():
     """Interface for quantizer classes"""
@@ -78,6 +80,8 @@ class FixedPointQuantizer_nearest(Quantizer_if):
         return FixedPoint.round_nearest(tensor,self.fixed_size,self.fixed_prec)
 
     def quantize(self,tensor):
+        print('quantize')
+        t0 = time.time()
         @tf.custom_gradient
         def op(tensor):
             def grad(dy):
@@ -88,7 +92,12 @@ class FixedPointQuantizer_nearest(Quantizer_if):
             # tag output
             out = tf.identity(out, name=str(self)+"_output")
             return out, grad
-        return op(tensor)
+
+        qtensor = op(tensor)
+        qtime = time.time() - t0
+        with open('/storage/timing.csv', 'a') as fd:
+            fd.write(str(qtime)+',')
+        return qtensor
 
 
 class FixedPointQuantizer_stochastic(Quantizer_if):
@@ -198,6 +207,8 @@ class BinaryQuantizer(Quantizer_if):
     def C_quantize(self,tensor):
         return Wrapped.quant_binary(tensor, self.marginal)
     def quantize(self, tensor):
+        print('quantize')
+        t0 = time.time()
         @tf.custom_gradient
         def op(tensor):
             def grad(dy):
@@ -205,7 +216,12 @@ class BinaryQuantizer(Quantizer_if):
             out = (tf.dtypes.cast(tf.greater_equal(tensor,0),tensor.dtype)*2-1)*self.marginal
             out = tf.identity(out, name=str(self)+"_output")
             return out, grad
-        return op(tensor)
+
+        qtensor = op(tensor)
+        qtime = time.time() - t0
+        with open('/storage/timing.csv', 'a') as fd:
+            fd.write(str(qtime) + ',')
+        return qtensor
 
 ###############################
 ### Ternary
@@ -245,4 +261,9 @@ class TernaryQuantizer(Quantizer_if):
 class NoQuantizer(Quantizer_if):
     """Applies no quantization to the tensor"""
     def quantize(self,tensor):
+        print('quantize')
+        t0 = time.time()
+        qtime = time.time() - t0
+        with open('/storage/timing.csv', 'a') as fd:
+            fd.write(str(qtime)+',')
         return tensor

@@ -46,8 +46,8 @@ def main():
     # TensorQuant
     # Make sure the overrides are set before the model is created!
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-    override.extr_q_map={"Conv1" : "nearest,12,11"}
-    override.weight_q_map={ "Conv1" : "nearest,32,16", "Dense3" : "nearest,32,16"}
+    #override.extr_q_map={"Conv1" : "nearest,16,8"}
+    override.weight_q_map={ "Conv1" : "nearest,16,8"}
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
     # Download the MNIST dataset
@@ -70,39 +70,39 @@ def main():
     # Tranform test labels to one-hot encoding
     test_labels = np.eye(10)[test_labels]
 
-    lenet = model.LeNet()
+    with open('/storage/timing.csv', 'w') as fd: #clear timing
+        fd.write('')
+    for i in range(0, 2):  # loop for some testing
+        lenet = model.LeNet()
+        lenet.summary()
+        optimizer = tf.keras.optimizers.SGD(lr=0.01)
+        # Compile the network
+        lenet.compile(
+            loss = "categorical_crossentropy",
+            optimizer = optimizer,
+            metrics = ["accuracy"])
 
-    lenet.summary()
+        # Callbacks
+        callbacks_list=[]
+        #callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
 
-    optimizer = tf.keras.optimizers.SGD(lr=0.01)
+        # Train the model
+        lenet.fit(
+            train_data,
+            train_labels,
+            batch_size = 128,
+            epochs = 10,
+            verbose = 1,
+            callbacks=callbacks_list)
 
-    # Compile the network
-    lenet.compile(
-        loss = "categorical_crossentropy",
-        optimizer = optimizer,
-        metrics = ["accuracy"])
-
-    # Callbacks
-    callbacks_list=[]
-    #callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
-
-    # Train the model
-    lenet.fit(
-        train_data,
-        train_labels,
-        batch_size = 128,
-        epochs = 1,
-        verbose = 1,
-        callbacks=callbacks_list)
-
-    # Evaluate the model
-    (loss, accuracy) = lenet.evaluate(
-        test_data,
-        test_labels,
-        batch_size = 128,
-        verbose = 1)
-    # Print the model's accuracy
-    print("Test accuracy: %.2f"%(accuracy))
+        # Evaluate the model
+        (loss, accuracy) = lenet.evaluate(
+            test_data,
+            test_labels,
+            batch_size = 128,
+            verbose = 1)
+        # Print the model's accuracy
+        print("Test accuracy: %.2f"%(accuracy))
 
 if __name__ == "__main__":
     main()
