@@ -278,3 +278,4 @@ class NoQuantizer(Quantizer_if):
     """Applies no quantization to the tensor"""
     def quantize(self,tensor):
         return tensor
+
