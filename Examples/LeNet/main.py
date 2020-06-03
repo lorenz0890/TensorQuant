@@ -18,6 +18,7 @@ import timeit
 
 # Add this for TensorQuant
 from TensorQuant.Quantize import override
+from TensorQuant.Quantize.Quantizers import Quantizer_Reference
 
 def main():
     # Control which devices TF sees. '-1' = None, '0', '1','2,'3'...PCI Bus ID
@@ -52,15 +53,15 @@ def main():
     # Make sure the overrides are set before the model is created!
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
     #override.extr_q_map={"Conv1" : "nearest,12,11"}
-    override.weight_q_map={ "Dense4" : "nearest,16,6"}
-
+    #override.weight_q_map={ "Dense3" : Quantizer_Reference(16,8)}
+    #override.weight_q_map={ "Dense3" : "nearest,16,8"}
     #override.weight_q_map = {"Conv1": "binary", "MaxPool1": "binary", "Conv2": "binary", "MaxPool2": "binary", "Dense3": "binary", "Dense4": "binary"}
 
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
     # Global Variable num_epochs, num_runs
-    num_epochs = 80
-    num_runs = 10
+    num_epochs = 5
+    num_runs = 1
     # Download the MNIST dataset
     dataset = mnist.load_data()
 
@@ -81,15 +82,13 @@ def main():
     # Tranform test labels to one-hot encoding
     test_labels = np.eye(10)[test_labels]
 
-    test_accuracies = list()
-    test_losses = list()
-    test_time = list()
+    test_accuracies = 0
+    test_losses = 0
+    test_time = 0
     avg_hist_acc = None
     avg_hist_acc_val = None
 
 
-    with open('/storage/timing.csv', 'w') as fd: #clear timing
-        fd.write('')
     for i in range(num_runs):
         lenet = model.LeNet()
 
@@ -122,7 +121,7 @@ def main():
 
         stop = timeit.default_timer()
 
-        test_time.append(stop - start)
+        test_time = stop - start
 
         # Evaluate the model
         (loss, accuracy) = lenet.evaluate(
@@ -131,8 +130,8 @@ def main():
             batch_size=128,
             verbose=1)
         # Push the model's accuracy in list
-        test_accuracies.append(accuracy)
-        test_losses.append(loss)
+        test_accuracies = accuracy
+        test_losses = loss
 
         if avg_hist_acc is None and avg_hist_acc_val is None:
             avg_hist_acc = hist.history['accuracy']
@@ -144,28 +143,29 @@ def main():
     avg_hist_acc = [x * (1 / num_runs) for x in avg_hist_acc]
     avg_hist_acc_val = [x * (1 / num_runs) for x in avg_hist_acc_val]
 
-    test_accuracies, test_losses, test_time = (list(x) for x in
-                                    zip(*sorted(zip(test_accuracies, test_losses, test_time), key=lambda pair: pair[0])))
+    #test_accuracies, test_losses, test_time = (list(x) for x in
+                                    #zip(*sorted(zip(test_accuracies, test_losses, test_time), key=lambda pair: pair[0])))
 
-    trimmed_mean_accuracy = 0
-    trimmed_mean_loss = 0
-    trimmed_mean_time = 0
+    #trimmed_mean_accuracy = 0
+    #trimmed_mean_loss = 0
+    #trimmed_mean_time = 0
 
-    for i in range(1, 9):
-        trimmed_mean_accuracy += test_accuracies[i]
-        trimmed_mean_loss += test_losses[i]
-        trimmed_mean_time += test_time[i]
+    #for i in range(1, 9):
+    #    trimmed_mean_accuracy += test_accuracies[i]
+    #    trimmed_mean_loss += test_losses[i]
+    #    trimmed_mean_time += test_time[i]
 
-    trimmed_mean_accuracy /= 8
-    trimmed_mean_loss /= 8
-    trimmed_mean_time /= 8
+    #trimmed_mean_accuracy /= 8
+    #trimmed_mean_loss /= 8
+    #trimmed_mean_time /= 8
 
     results = {}
     results['eval_accuracies'] = test_accuracies
     results['eval_losses'] = test_losses
-    results['eval_trimmed_mean_accuracy'] = trimmed_mean_accuracy
-    results['eval_trimmed_mean_loss'] = trimmed_mean_loss
-    results['avg_train_trimmed_mean_time'] = trimmed_mean_time
+    results['eval_time'] = test_time
+    #esults['eval_trimmed_mean_accuracy'] = trimmed_mean_accuracy
+    #results['eval_trimmed_mean_loss'] = trimmed_mean_loss
+    #results['avg_train_trimmed_mean_time'] = trimmed_mean_time
     results['avg_train_hist_acc'] = avg_hist_acc
     results['avg_train_hist_acc_val'] = avg_hist_acc_val
 
