@@ -1,8 +1,6 @@
 from TensorQuant.Quantize import FixedPoint
 from TensorQuant.Quantize import QuantKernelWrapper as Wrapped
 import tensorflow as tf
-import time
-import csv
 
 class Quantizer_if():
     """Interface for quantizer classes"""
@@ -80,8 +78,6 @@ class FixedPointQuantizer_nearest(Quantizer_if):
         return FixedPoint.round_nearest(tensor,self.fixed_size,self.fixed_prec)
 
     def quantize(self,tensor):
-        print('quantize')
-        t0 = time.time()
         @tf.custom_gradient
         def op(tensor):
             def grad(dy):
@@ -94,9 +90,34 @@ class FixedPointQuantizer_nearest(Quantizer_if):
             return out, grad
 
         qtensor = op(tensor)
-        qtime = time.time() - t0
-        with open('/storage/timing.csv', 'a') as fd:
-            fd.write(str(qtime)+',')
+        return qtensor
+
+
+class Quantizer_Reference(Quantizer_if):
+    """for overflow measurements as a reference
+    """
+    def __init__(self, fixed_size, fixed_prec):
+        self.fixed_size=fixed_size
+        self.fixed_prec=fixed_prec
+        self.fixed_max_signed =  (1<<(fixed_size-1)-1)/(1<<fixed_prec)
+        self.fixed_min_signed = -(1<<(fixed_size-fixed_prec-1))
+
+    def C_quantize(self,tensor):
+        return FixedPoint.round_nearest(tensor,self.fixed_size,self.fixed_prec)
+
+    def quantize(self,tensor):
+        @tf.custom_gradient
+        def op(tensor):
+            def grad(dy):
+                return dy
+            out =  tf.math.floor( tf.math.abs(tensor)*(1<<self.fixed_prec)+0.5) /(1<<self.fixed_prec) * tf.math.sign(tensor)
+            # handle overflow (saturate number towards maximum or minimum)
+            out = tf.math.maximum( tf.math.minimum( out, self.fixed_max_signed ), self.fixed_min_signed)
+            # tag output
+            out = tf.identity(out, name=str(self)+"_output")
+            return tensor, grad
+
+        qtensor = op(tensor)
         return qtensor
 
 
@@ -207,8 +228,6 @@ class BinaryQuantizer(Quantizer_if):
     def C_quantize(self,tensor):
         return Wrapped.quant_binary(tensor, self.marginal)
     def quantize(self, tensor):
-        print('quantize')
-        t0 = time.time()
         @tf.custom_gradient
         def op(tensor):
             def grad(dy):
@@ -218,9 +237,6 @@ class BinaryQuantizer(Quantizer_if):
             return out, grad
 
         qtensor = op(tensor)
-        qtime = time.time() - t0
-        with open('/storage/timing.csv', 'a') as fd:
-            fd.write(str(qtime) + ',')
         return qtensor
 
 ###############################
@@ -261,9 +277,4 @@ class TernaryQuantizer(Quantizer_if):
 class NoQuantizer(Quantizer_if):
     """Applies no quantization to the tensor"""
     def quantize(self,tensor):
-        print('quantize')
-        t0 = time.time()
-        qtime = time.time() - t0
-        with open('/storage/timing.csv', 'a') as fd:
-            fd.write(str(qtime)+',')
         return tensor
