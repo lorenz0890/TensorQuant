@@ -11,6 +11,8 @@ import numpy as np
 
 import model
 
+from tensorflow import keras # Required for Tensorboard
+from datetime import datetime # Required for Tensorboard
 # Add this for TensorQuant
 from TensorQuant.Quantize import override
 
@@ -72,6 +74,8 @@ def main():
 
     with open('/storage/timing.csv', 'w') as fd: #clear timing
         fd.write('')
+
+    tf.summary.trace_on(graph=True, profiler=True) # Required by Tensorboard Profiling
     for i in range(0, 2):  # loop for some testing
         lenet = model.LeNet()
         lenet.summary()
@@ -85,6 +89,19 @@ def main():
         # Callbacks
         callbacks_list=[]
         #callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
+        logdir = "/storage/logs/scalars/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+        tensorboard_callback_scalars = keras.callbacks.TensorBoard(log_dir=logdir)
+
+        logdir2 = "/storage/logs/performance/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+        tensorboard_callback_perf = tf.keras.callbacks.TensorBoard(log_dir = logdir2,
+                                                         histogram_freq = 1,
+                                                         profile_batch = 2) # Profile Batch can be changed
+
+        # Warning:
+        # callbacks might affect external runtime measurements with timeit and such
+        # profiling also uses a lot of memory
+        callbacks_list.append(tensorboard_callback_scalars) # comment this to deactivate TB scalars
+        callbacks_list.append(tensorboard_callback_perf) # comment this to deactivate TB profiling
 
         # Train the model
         lenet.fit(
