@@ -114,7 +114,7 @@ def main():
 
         # Warning:
         # callbacks might affect external runtime measurements with timeit and such
-        # profiling also uses a lot of memory
+        # profiling also uses a lot of memorynnen
         callbacks_list.append(tensorboard_callback_scalars) # comment this to deactivate TB scalars
         callbacks_list.append(tensorboard_callback_perf) # comment this to deactivate TB profiling
 
