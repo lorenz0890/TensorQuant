@@ -53,14 +53,14 @@ def main():
     # Make sure the overrides are set before the model is created!
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
     #override.extr_q_map={"Conv1" : "nearest,12,11"}
-    #override.weight_q_map={ "Dense3" : Quantizer_Reference(16,8)}
+    override.weight_q_map={ "Dense3" : Quantizer_Reference(16,8)}
     #override.weight_q_map={ "Dense3" : "nearest,16,8"}
     #override.weight_q_map = {"Conv1": "binary", "MaxPool1": "binary", "Conv2": "binary", "MaxPool2": "binary", "Dense3": "binary", "Dense4": "binary"}
 
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
     # Global Variable num_epochs, num_runs
-    num_epochs = 5
+    num_epochs = 80
     num_runs = 1
     # Download the MNIST dataset
     dataset = mnist.load_data()
