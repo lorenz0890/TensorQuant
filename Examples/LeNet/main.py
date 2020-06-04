@@ -18,6 +18,7 @@ import timeit
 
 from tensorflow import keras # Required for Tensorboard
 from datetime import datetime # Required for Tensorboard
+
 # Add this for TensorQuant
 from TensorQuant.Quantize import override
 from TensorQuant.Quantize.Quantizers import Quantizer_Reference
@@ -55,7 +56,7 @@ def main():
     # Make sure the overrides are set before the model is created!
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
     #override.extr_q_map={"Conv1" : "nearest,12,11"}
-    override.weight_q_map={ "Dense3" : Quantizer_Reference(16,8)}
+    #override.weight_q_map={ "Dense3" : Quantizer_Reference(16,8)}
     #override.weight_q_map={ "Dense3" : "nearest,16,8"}
     #override.weight_q_map = {"Conv1": "binary", "MaxPool1": "binary", "Conv2": "binary", "MaxPool2": "binary", "Dense3": "binary", "Dense4": "binary"}
 
@@ -90,8 +91,8 @@ def main():
     avg_hist_acc = None
     avg_hist_acc_val = None
 
-    tf.summary.trace_on(graph=True, profiler=True)  # Required by Tensorboard Profiling
     for i in range(num_runs):
+        tf.summary.trace_on(graph=True, profiler=True)  # Required by Tensorboard Profiling
         lenet = model.LeNet()
         lenet.summary()
         optimizer = tf.keras.optimizers.SGD(lr=0.01)
@@ -105,7 +106,7 @@ def main():
         callbacks_list=[]
         #callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
         logdir = "/storage/logs/scalars/" + datetime.now().strftime("%Y%m%d-%H%M%S")
-        tensorboard_callback_scalars = keras.callbacks.TensorBoard(log_dir=logdir)
+        #tensorboard_callback_scalars = keras.callbacks.TensorBoard(log_dir=logdir)
 
         logdir2 = "/storage/logs/performance/" + datetime.now().strftime("%Y%m%d-%H%M%S")
         tensorboard_callback_perf = tf.keras.callbacks.TensorBoard(log_dir = logdir2,
@@ -115,7 +116,7 @@ def main():
         # Warning:
         # callbacks might affect external runtime measurements with timeit and such
         # profiling also uses a lot of memorynnen
-        callbacks_list.append(tensorboard_callback_scalars) # comment this to deactivate TB scalars
+        #callbacks_list.append(tensorboard_callback_scalars) # comment this to deactivate TB scalars
         callbacks_list.append(tensorboard_callback_perf) # comment this to deactivate TB profiling
 
         # Start Timer
@@ -203,3 +204,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
