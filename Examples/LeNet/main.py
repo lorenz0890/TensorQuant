@@ -64,7 +64,7 @@ def main():
 
     # Global Variable num_epochs, num_runs
     num_epochs = 80
-    num_runs = 1
+#    num_runs = 1
     # Download the MNIST dataset
     dataset = mnist.load_data()
 
@@ -85,31 +85,33 @@ def main():
     # Tranform test labels to one-hot encoding
     test_labels = np.eye(10)[test_labels]
 
-    test_accuracies = 0
-    test_losses = 0
-    test_time = 0
-    avg_hist_acc = None
-    avg_hist_acc_val = None
+#    test_accuracies = 0
+#    test_losses = 0
+#    test_time = 0
+#    avg_hist_acc = None
+#    avg_hist_acc_val = None
 
-    for i in range(num_runs):
-        tf.summary.trace_on(graph=True, profiler=True)  # Required by Tensorboard Profiling
-        lenet = model.LeNet()
-        lenet.summary()
-        optimizer = tf.keras.optimizers.SGD(lr=0.01)
+#    for i in range(num_runs):
+    tf.summary.trace_on(graph=True, profiler=True)  # Required by Tensorboard Profiling
+    lenet = model.LeNet()
+#        lenet.summary()
+    optimizer = tf.keras.optimizers.SGD(lr=0.01)
         # Compile the network
-        lenet.compile(
-            loss="categorical_crossentropy",
-            optimizer=optimizer,
-            metrics=["accuracy"])
+    lenet.compile(
+        loss="categorical_crossentropy",
+        optimizer=optimizer,
+        metrics=["accuracy"],
+        run_eagerly=False
+    )
 
         # Callbacks
-        callbacks_list=[]
+#        callbacks_list=[]
         #callbacks_list.append(callbacks.WriteTrace("timeline_%02d.json"%(myRank), run_metadata) )
-        logdir = "/storage/logs/scalars/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+#        logdir = "/storage/logs/scalars/" + datetime.now().strftime("%Y%m%d-%H%M%S")
         #tensorboard_callback_scalars = keras.callbacks.TensorBoard(log_dir=logdir)
 
-        logdir2 = "/storage/logs/performance/" + datetime.now().strftime("%Y%m%d-%H%M%S")
-        tensorboard_callback_perf = tf.keras.callbacks.TensorBoard(log_dir = logdir2,
+    logdir2 = "/storage/logs/performance/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+    tensorboard_callback_perf = tf.keras.callbacks.TensorBoard(log_dir = logdir2,
                                                          histogram_freq = 1,
                                                          profile_batch = 2) # Profile Batch can be changed
 
@@ -117,44 +119,44 @@ def main():
         # callbacks might affect external runtime measurements with timeit and such
         # profiling also uses a lot of memorynnen
         #callbacks_list.append(tensorboard_callback_scalars) # comment this to deactivate TB scalars
-        callbacks_list.append(tensorboard_callback_perf) # comment this to deactivate TB profiling
+    callbacks_list.append(tensorboard_callback_perf) # comment this to deactivate TB profiling
 
         # Start Timer
-        start = timeit.default_timer()
+    start = timeit.default_timer()
 
         # Train the model
-        hist = lenet.fit(
-            train_data,
-            train_labels,
-            batch_size=128,
-            epochs=num_epochs,
-            validation_split=0.33,
-            verbose=1,
-            callbacks=callbacks_list)
+    hist = lenet.fit(
+        train_data,
+        train_labels,
+        batch_size=128,
+        epochs=num_epochs,
+        validation_split=0.33,
+        verbose=1,
+        callbacks=callbacks_list)
 
-        stop = timeit.default_timer()
+#        stop = timeit.default_timer()
 
-        test_time = stop - start
+#        test_time = stop - start
 
         # Evaluate the model
-        (loss, accuracy) = lenet.evaluate(
-            test_data,
-            test_labels,
-            batch_size=128,
-            verbose=1)
+#        (loss, accuracy) = lenet.evaluate(
+#            test_data,
+#            test_labels,
+#            batch_size=128,
+#            verbose=1)
         # Push the model's accuracy in list
-        test_accuracies = accuracy
-        test_losses = loss
+#        test_accuracies = accuracy
+#        test_losses = loss
 
-        if avg_hist_acc is None and avg_hist_acc_val is None:
-            avg_hist_acc = hist.history['accuracy']
-            avg_hist_acc_val = hist.history['val_accuracy']
-        else:
-            avg_hist_acc = list(map(add, avg_hist_acc, hist.history['accuracy']))
-            avg_hist_acc_val = list(map(add, avg_hist_acc_val, hist.history['val_accuracy']))
+#        if avg_hist_acc is None and avg_hist_acc_val is None:
+#            avg_hist_acc = hist.history['accuracy']
+#            avg_hist_acc_val = hist.history['val_accuracy']
+#        else:
+#            avg_hist_acc = list(map(add, avg_hist_acc, hist.history['accuracy']))
+#            avg_hist_acc_val = list(map(add, avg_hist_acc_val, hist.history['val_accuracy']))
 
-    avg_hist_acc = [x * (1 / num_runs) for x in avg_hist_acc]
-    avg_hist_acc_val = [x * (1 / num_runs) for x in avg_hist_acc_val]
+#    avg_hist_acc = [x * (1 / num_runs) for x in avg_hist_acc]
+#    avg_hist_acc_val = [x * (1 / num_runs) for x in avg_hist_acc_val]
 
     #test_accuracies, test_losses, test_time = (list(x) for x in
                                     #zip(*sorted(zip(test_accuracies, test_losses, test_time), key=lambda pair: pair[0])))
@@ -172,18 +174,18 @@ def main():
     #trimmed_mean_loss /= 8
     #trimmed_mean_time /= 8
 
-    results = {}
-    results['eval_accuracies'] = test_accuracies
-    results['eval_losses'] = test_losses
-    results['eval_time'] = test_time
+#    results = {}
+#    results['eval_accuracies'] = test_accuracies
+#    results['eval_losses'] = test_losses
+#    results['eval_time'] = test_time
     #esults['eval_trimmed_mean_accuracy'] = trimmed_mean_accuracy
     #results['eval_trimmed_mean_loss'] = trimmed_mean_loss
     #results['avg_train_trimmed_mean_time'] = trimmed_mean_time
-    results['avg_train_hist_acc'] = avg_hist_acc
-    results['avg_train_hist_acc_val'] = avg_hist_acc_val
+#    results['avg_train_hist_acc'] = avg_hist_acc
+#    results['avg_train_hist_acc_val'] = avg_hist_acc_val
 
-    with open('/storage/results.pkl', 'wb') as fp:
-    	pickle.dump(results, fp)
+#    with open('/storage/results.pkl', 'wb') as fp:
+#    	pickle.dump(results, fp)
     #print(test_accuracies)
     #print(test_losses)
     #print(test_time)
