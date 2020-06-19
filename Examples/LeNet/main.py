@@ -58,12 +58,12 @@ def main():
     #override.extr_q_map={"Conv1" : "nearest,12,11"}
     #override.weight_q_map={ "Dense3" : Quantizer_Reference(16,8)}
     #override.weight_q_map={ "Dense3" : "nearest,16,8"}
-    #override.weight_q_map = {"Conv1": "binary", "MaxPool1": "binary", "Conv2": "binary", "MaxPool2": "binary", "Dense3": "binary", "Dense4": "binary"}
+    override.weight_q_map = {"Conv1": "binary", "MaxPool1": "binary", "Conv2": "binary", "MaxPool2": "binary", "Dense3": "binary", "Dense4": "binary"}
 
     # QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 
     # Global Variable num_epochs, num_runs
-    num_epochs = 80
+    num_epochs = 1
 #    num_runs = 1
     # Download the MNIST dataset
     dataset = mnist.load_data()
@@ -109,16 +109,16 @@ def main():
 #        logdir = "/storage/logs/scalars/" + datetime.now().strftime("%Y%m%d-%H%M%S")
         #tensorboard_callback_scalars = keras.callbacks.TensorBoard(log_dir=logdir)
 
-    logdir2 = "/storage/logs/performance/" + datetime.now().strftime("%Y%m%d-%H%M%S")
-    tensorboard_callback_perf = tf.keras.callbacks.TensorBoard(log_dir = logdir2,
-                                                         histogram_freq = 1,
-                                                         profile_batch = 0) # Profile Batch can be changed
+    #logdir2 = "/storage/logs/performance/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+    #tensorboard_callback_perf = tf.keras.callbacks.TensorBoard(log_dir = logdir2,
+    #                                                     histogram_freq = 1,
+    #                                                     profile_batch = 0) # Profile Batch can be changed
 
         # Warning:
         # callbacks might affect external runtime measurements with timeit and such
         # profiling also uses a lot of memorynnen
         #callbacks_list.append(tensorboard_callback_scalars) # comment this to deactivate TB scalars
-    callbacks_list.append(tensorboard_callback_perf) # comment this to deactivate TB profiling
+    #callbacks_list.append(tensorboard_callback_perf) # comment this to deactivate TB profiling
 
         # Start Timer
     start = timeit.default_timer()
@@ -130,8 +130,8 @@ def main():
         batch_size=128,
         epochs=num_epochs,
         validation_split=0.33,
-        verbose=1,
-        callbacks=callbacks_list)
+        verbose=1)#,
+        #callbacks=callbacks_list)
 
 #        stop = timeit.default_timer()
 
