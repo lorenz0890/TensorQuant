@@ -112,7 +112,7 @@ def main():
     logdir2 = "/storage/logs/performance/" + datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback_perf = tf.keras.callbacks.TensorBoard(log_dir = logdir2,
                                                          histogram_freq = 1,
-                                                         profile_batch = 2) # Profile Batch can be changed
+                                                         profile_batch = 0) # Profile Batch can be changed
 
         # Warning:
         # callbacks might affect external runtime measurements with timeit and such
