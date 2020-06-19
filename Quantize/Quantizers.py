@@ -120,6 +120,29 @@ class Quantizer_Reference(Quantizer_if):
         qtensor = op(tensor)
         return qtensor
 
+class Float16Quantizer_cast(Quantizer_if):
+    """TODO
+    """
+    def __init__(self):
+        pass
+
+    def C_quantize(self,tensor):
+        return FixedPoint.round_nearest(tensor,self.fixed_size,self.fixed_prec)
+
+    def quantize(self,tensor):
+        @tf.custom_gradient
+        def op(tensor):
+            def grad(dy):
+                return dy
+            out =  tf.math.floor( tf.math.abs(tensor)*(1<<self.fixed_prec)+0.5) /(1<<self.fixed_prec) * tf.math.sign(tensor)
+            # handle overflow (saturate number towards maximum or minimum)
+            out = tf.math.maximum( tf.math.minimum( out, self.fixed_max_signed ), self.fixed_min_signed)
+            # tag output
+            out = tf.identity(out, name=str(self)+"_output")
+            return out, grad
+
+        qtensor = op(tensor)
+        return qtensor
 
 class FixedPointQuantizer_stochastic(Quantizer_if):
     """Fixed point quantization with fixed_size bits and fixed_prec fractional bits.
